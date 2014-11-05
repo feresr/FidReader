@@ -1,9 +1,12 @@
 package models;
 
+import java.util.ArrayList;
+
 /**
  * Created by fernando.raviola on 11/4/2014.
  */
 public class Feed {
+    public static ArrayList<Feed> feeds = new ArrayList<Feed>();
     private String url;
     private String title;
     private String contentSnippet;

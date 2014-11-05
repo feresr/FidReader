@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -26,7 +27,7 @@ import retrofit.client.Response;
 
 
 public class Main extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FeedFragment.OnFragmentInteractionListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -37,12 +38,13 @@ public class Main extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-    private final String TAG = ((Object) this).getClass().getSimpleName().toString();
-    GoogleFeedInterface mFeedInterface = GoogleFeedClient.getGoogleFeedClient(this);
+    private final String TAG = ((Object) this).getClass().getSimpleName();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -53,44 +55,37 @@ public class Main extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+        switch (position){
+            case 0:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, FeedFragment.newInstance(position + 1))
+                        .commit();
+                break;
+            default:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, PlaceholderFragment.newInstance(position))
+                        .commit();
+
+        }
+
     }
 
     public void onSectionAttached(int number) {
         switch (number) {
-            case 1:
+            case 0:
                 mTitle = getString(R.string.title_section1);
-
-                //On attach fetch "ANDROID" feeds
-                mFeedInterface.getFeeds(new Callback<FeedResponse>() {
-                    @Override
-                    public void success(FeedResponse feedResponse, Response response) {
-                        ArrayList<Feed> feeds = feedResponse.getResponseData().getEntries();
-                        for (Feed feed : feeds) {
-                            Log.d(TAG, feed.toString());
-                        }
-
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-
-                    }
-                });
-
                 break;
-            case 2:
+            case 1:
                 mTitle = getString(R.string.title_section2);
                 break;
-            case 3:
+            case 2:
                 mTitle = getString(R.string.title_section3);
                 break;
         }
@@ -129,6 +124,13 @@ public class Main extends Activity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onFragmentInteraction(String id) {
+    }
+
+
+
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -156,7 +158,7 @@ public class Main extends Activity
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
+                                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             return rootView;
         }
@@ -168,5 +170,4 @@ public class Main extends Activity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
-
 }
