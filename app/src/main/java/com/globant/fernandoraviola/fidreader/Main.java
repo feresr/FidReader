@@ -5,18 +5,24 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+
+import java.util.ArrayList;
+
+import api.GoogleFeedClient;
+import api.GoogleFeedInterface;
+import models.Feed;
+import models.FeedResponse;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class Main extends Activity
@@ -31,6 +37,8 @@ public class Main extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+    private final String TAG = ((Object) this).getClass().getSimpleName().toString();
+    GoogleFeedInterface mFeedInterface = GoogleFeedClient.getGoogleFeedClient(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +68,24 @@ public class Main extends Activity
         switch (number) {
             case 1:
                 mTitle = getString(R.string.title_section1);
+
+                //On attach fetch "ANDROID" feeds
+                mFeedInterface.getFeeds(new Callback<FeedResponse>() {
+                    @Override
+                    public void success(FeedResponse feedResponse, Response response) {
+                        ArrayList<Feed> feeds = feedResponse.getResponseData().getEntries();
+                        for (Feed feed : feeds) {
+                            Log.d(TAG, feed.toString());
+                        }
+
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+
+                    }
+                });
+
                 break;
             case 2:
                 mTitle = getString(R.string.title_section2);
