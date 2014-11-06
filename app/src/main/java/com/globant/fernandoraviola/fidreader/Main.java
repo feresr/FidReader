@@ -1,32 +1,20 @@
 package com.globant.fernandoraviola.fidreader;
 
-import android.app.Activity;
 
 import android.app.ActionBar;
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-
-import api.GoogleFeedClient;
-import api.GoogleFeedInterface;
-import models.Feed;
-import models.FeedResponse;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-
-
-public class Main extends Activity
+public class Main extends FragmentActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, FeedFragment.OnFragmentInteractionListener {
 
     /**
@@ -38,7 +26,7 @@ public class Main extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-    private final String TAG = ((Object) this).getClass().getSimpleName();
+    private static final String TAG = Main.class.getSimpleName();
 
 
     @Override
@@ -61,7 +49,7 @@ public class Main extends Activity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         switch (position){
             case 0:
                 fragmentManager.beginTransaction()

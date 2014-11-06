@@ -4,9 +4,12 @@ import java.util.ArrayList;
 
 /**
  * Created by fernando.raviola on 11/4/2014.
+ *
+ * Stores all attributes and methods related to a specific Feed.
+ *
  */
 public class Feed {
-    public static ArrayList<Feed> feeds = new ArrayList<Feed>();
+
     private String url;
     private String title;
     private String contentSnippet;

@@ -2,6 +2,10 @@ package models;
 
 /**
  * Created by fernando.raviola on 11/4/2014.
+ *
+ * Stores all attributes and methods related to a specific FeedResponse.
+ * FeedResponse is the Model representation of the JSON response returned by the API.
+ *
  */
 public class FeedResponse {
 

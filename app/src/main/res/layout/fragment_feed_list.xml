@@ -5,15 +5,20 @@
     android:layout_height="match_parent"
     tools:context="com.globant.fernandoraviola.fidreader.FeedFragment">
 
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <TextView
         android:id="@android:id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
+        android:text="@string/no_feed_message"
         android:gravity="center" />
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+
 
 </FrameLayout>

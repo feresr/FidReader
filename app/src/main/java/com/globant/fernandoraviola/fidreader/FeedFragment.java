@@ -1,22 +1,23 @@
 package com.globant.fernandoraviola.fidreader;
 
 import android.app.Activity;
-import android.database.DataSetObserver;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.util.Log;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 
-import api.GoogleFeedClient;
-import api.GoogleFeedInterface;
+import java.util.ArrayList;
+
+import networking.GoogleFeedClient;
+import networking.GoogleFeedInterface;
 import models.Feed;
 import models.FeedResponse;
 import retrofit.Callback;
@@ -34,11 +35,12 @@ import retrofit.client.Response;
  */
 public class FeedFragment extends Fragment implements AbsListView.OnItemClickListener {
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String SECTION = "section";
-    GoogleFeedInterface mFeedInterface = GoogleFeedClient.getGoogleFeedClient(getActivity());
-    // TODO: Rename and change types of parameters
+    GoogleFeedInterface mFeedInterface = GoogleFeedClient.getGoogleFeedInterface(getActivity());
+
+    public ArrayList<Feed> feeds = new ArrayList<Feed>();
+
     private int section;
 
     private OnFragmentInteractionListener mListener;
@@ -46,7 +48,7 @@ public class FeedFragment extends Fragment implements AbsListView.OnItemClickLis
     /**
      * The fragment's ListView/GridView.
      */
-    private AbsListView mListView;
+    private ListView mListView;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -54,7 +56,6 @@ public class FeedFragment extends Fragment implements AbsListView.OnItemClickLis
      */
     private FeedAdapter mAdapter;
 
-    // TODO: Rename and change types of parameters
     public static FeedFragment newInstance(int section) {
         FeedFragment fragment = new FeedFragment();
         Bundle args = new Bundle();
@@ -79,7 +80,7 @@ public class FeedFragment extends Fragment implements AbsListView.OnItemClickLis
         }
 
         mAdapter = new FeedAdapter(getActivity(),
-                android.R.layout.simple_list_item_1, Feed.feeds);
+                android.R.layout.simple_list_item_2, feeds);
 
     }
 
@@ -89,9 +90,9 @@ public class FeedFragment extends Fragment implements AbsListView.OnItemClickLis
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
         // Set the adapter
-        mListView = (AbsListView) view.findViewById(android.R.id.list);
-        mAdapter.setNotifyOnChange(true);
+        mListView = (ListView) view.findViewById(android.R.id.list);
         mListView.setAdapter(mAdapter);
+        mListView.setEmptyView(view.findViewById(android.R.id.empty));
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
@@ -155,7 +156,7 @@ public class FeedFragment extends Fragment implements AbsListView.OnItemClickLis
     * >Communicating with Other Fragments</a> for more information.
     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+
         public void onFragmentInteraction(String id);
     }
 
@@ -163,11 +164,20 @@ public class FeedFragment extends Fragment implements AbsListView.OnItemClickLis
         mFeedInterface.getFeeds(new Callback<FeedResponse>() {
             @Override
             public void success(FeedResponse feedResponse, Response response) {
-                Feed.feeds = feedResponse.getResponseData().getEntries();
-                mAdapter.setFeeds(Feed.feeds);
+                feeds = feedResponse.getResponseData().getEntries();
+                mAdapter.updateFeeds(feeds);
             }
             @Override
             public void failure(RetrofitError error) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(R.string.retrofit_error)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        });
+               builder.create().show();
+
             }
         });
     }
