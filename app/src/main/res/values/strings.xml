@@ -2,12 +2,16 @@
 <resources>
 
     <string name="app_name">Fid Reader</string>
-    <string name="title_section1">Section 1</string>
+    <string name="title_section1">Android feeds</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
+    <string name="retrofit_http_error">A server-related error occurred while making your request, please try again later.</string>
+    <string name="retrofit_network_error">No internet connection. Please, make sure you\'re connected to a network that has internet access.</string>
+    <string name="no_feed_message">There are no feeds yet. Add some! :)</string>
+    <string name="off_line_message">You\'re not connected to any network. Please turn on Wifi/data and try again.</string>
 
 </resources>
