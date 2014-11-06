@@ -1,4 +1,4 @@
-package com.globant.fernandoraviola.fidreader;
+package com.globant.fernandoraviola.fidreader.activities;
 
 
 import android.app.ActionBar;
@@ -14,7 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 
-public class Main extends FragmentActivity
+import com.globant.fernandoraviola.fidreader.R;
+import com.globant.fernandoraviola.fidreader.fragments.FeedFragment;
+import com.globant.fernandoraviola.fidreader.fragments.NavigationDrawerFragment;
+
+public class MainActivity extends FragmentActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, FeedFragment.OnFragmentInteractionListener {
 
     /**
@@ -26,7 +30,7 @@ public class Main extends FragmentActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-    private static final String TAG = Main.class.getSimpleName();
+    private static final String TAG = MainActivity.class.getSimpleName();
 
 
     @Override
@@ -48,7 +52,7 @@ public class Main extends FragmentActivity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
+        // Update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         switch (position){
             case 0:
@@ -60,9 +64,7 @@ public class Main extends FragmentActivity
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, PlaceholderFragment.newInstance(position))
                         .commit();
-
         }
-
     }
 
     public void onSectionAttached(int number) {
@@ -154,7 +156,7 @@ public class Main extends FragmentActivity
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
-            ((Main) activity).onSectionAttached(
+            ((MainActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }

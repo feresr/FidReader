@@ -1,4 +1,4 @@
-package networking;
+package com.globant.fernandoraviola.fidreader.networking;
 
 import android.content.Context;
 

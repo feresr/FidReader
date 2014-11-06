@@ -1,4 +1,4 @@
-package models;
+package com.globant.fernandoraviola.fidreader.networking.response;
 
 /**
  * Created by fernando.raviola on 11/4/2014.
@@ -11,7 +11,7 @@ public class FeedResponse {
 
     private String responseDetails;
     private String responseStatus;
-    private ResponseData responseData;
+    private FeedResponseData responseData;
 
 
     public String getResponseDetails() {
@@ -30,11 +30,11 @@ public class FeedResponse {
         this.responseStatus = responseStatus;
     }
 
-    public ResponseData getResponseData() {
+    public FeedResponseData getResponseData() {
         return responseData;
     }
 
-    public void setResponseData(ResponseData responseData) {
+    public void setResponseData(FeedResponseData responseData) {
         this.responseData = responseData;
     }
 }

@@ -1,6 +1,4 @@
-package models;
-
-import java.util.ArrayList;
+package com.globant.fernandoraviola.fidreader.models;
 
 /**
  * Created by fernando.raviola on 11/4/2014.

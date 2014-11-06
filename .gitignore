@@ -26,3 +26,5 @@ build/
 
 creative/res/
 .project
+
+.idea/vcs.xml

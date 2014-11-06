@@ -1,16 +1,14 @@
-package com.globant.fernandoraviola.fidreader;
+package com.globant.fernandoraviola.fidreader.adapters;
 
 import android.content.Context;
 import android.text.Html;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import java.util.ArrayList;
 
-import models.Feed;
+import com.globant.fernandoraviola.fidreader.models.Feed;
 
 /**
  * Created by fernando.raviola on 11/5/2014.
@@ -48,26 +46,23 @@ public class FeedAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        TextView feedTitle;
-        TextView feedLink;
 
-        if (convertView == null) {
-            convertView = LayoutInflater.from(context)
-                    .inflate(resource, parent, false);
-            feedTitle = (TextView) convertView.findViewById(android.R.id.text1);
-            feedLink = (TextView) convertView.findViewById(android.R.id.text2);
-            convertView.setTag(new ViewHolder(feedTitle, feedLink));
+        View view = convertView;
+        FeedViewHolder feedViewHolder;
+
+        if (view == null) {
+            view = View.inflate(context, resource, null);
+            feedViewHolder = new FeedViewHolder(view);
+            view.setTag(feedViewHolder);
         } else {
-            ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-            feedTitle = viewHolder.feedTitle;
-            feedLink = viewHolder.feedLink;
+            feedViewHolder = (FeedViewHolder) view.getTag();
         }
 
         Feed feed = getItem(position);
+        feedViewHolder.feedTitle.setText(Html.fromHtml(feed.getTitle()));
+        feedViewHolder.feedLink.setText(Html.fromHtml(feed.getLink()));
 
-        feedTitle.setText(Html.fromHtml(feed.getTitle()));
-        feedLink.setText(Html.fromHtml(feed.getLink()));
-        return convertView;
+        return view;
     }
 
     public void updateFeeds(ArrayList<Feed> feeds) {
@@ -75,14 +70,14 @@ public class FeedAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    private static class ViewHolder {
+    private static class FeedViewHolder {
 
         public final TextView feedTitle;
         public final TextView feedLink;
 
-        public ViewHolder(TextView feedTitle, TextView feedLink) {
-            this.feedTitle = feedTitle;
-            this.feedLink = feedLink;
+        public FeedViewHolder(View view) {
+            this.feedTitle = (TextView) view.findViewById(android.R.id.text1);
+            this.feedLink = (TextView) view.findViewById(android.R.id.text2);;
         }
     }
 

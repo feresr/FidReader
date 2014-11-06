@@ -1,4 +1,4 @@
-package com.globant.fernandoraviola.fidreader;
+package com.globant.fernandoraviola.fidreader.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,24 +14,22 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
+import com.globant.fernandoraviola.fidreader.adapters.FeedAdapter;
+import com.globant.fernandoraviola.fidreader.activities.MainActivity;
+import com.globant.fernandoraviola.fidreader.R;
+
 import java.util.ArrayList;
 
-import networking.GoogleFeedClient;
-import networking.GoogleFeedInterface;
-import models.Feed;
-import models.FeedResponse;
+import com.globant.fernandoraviola.fidreader.networking.GoogleFeedClient;
+import com.globant.fernandoraviola.fidreader.networking.GoogleFeedInterface;
+import com.globant.fernandoraviola.fidreader.models.Feed;
+import com.globant.fernandoraviola.fidreader.networking.response.FeedResponse;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * A fragment representing a list of Items.
- * <p />
- * Large screen devices (such as tablets) are supported by replacing the ListView
- * with a GridView.
- * <p />
- *
- * interface.
+ * A fragment representing a list of Feeds.
  */
 public class FeedFragment extends Fragment implements AbsListView.OnItemClickListener {
 
@@ -104,10 +102,10 @@ public class FeedFragment extends Fragment implements AbsListView.OnItemClickLis
         super.onAttach(activity);
         try {
             mListener = (OnFragmentInteractionListener) activity;
-            ((Main) activity).onSectionAttached(section);
+            ((MainActivity) activity).onSectionAttached(section);
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                + " must implement OnFragmentInteractionListener");
+                    + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -146,15 +144,15 @@ public class FeedFragment extends Fragment implements AbsListView.OnItemClickLis
     }
 
     /**
-    * This interface must be implemented by activities that contain this
-    * fragment to allow an interaction in this fragment to be communicated
-    * to the activity and potentially other fragments contained in that
-    * activity.
-    * <p>
-    * See the Android Training lesson <a href=
-    * "http://developer.android.com/training/basics/fragments/communicating.html"
-    * >Communicating with Other Fragments</a> for more information.
-    */
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
     public interface OnFragmentInteractionListener {
 
         public void onFragmentInteraction(String id);
@@ -167,18 +165,30 @@ public class FeedFragment extends Fragment implements AbsListView.OnItemClickLis
                 feeds = feedResponse.getResponseData().getEntries();
                 mAdapter.updateFeeds(feeds);
             }
+
             @Override
             public void failure(RetrofitError error) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage(R.string.retrofit_error)
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                            }
-                        });
-               builder.create().show();
+                /** The request wasn't able to reach the server. */
+                if (error.getKind() == RetrofitError.Kind.NETWORK) {
+                    alertError(R.string.retrofit_network_error);
+                }
 
+                /** A non-200 HTTP status code was received from the server. */
+                if (error.getKind() == RetrofitError.Kind.HTTP) {
+                    alertError(R.string.retrofit_http_error);
+                }
             }
         });
+    }
+
+    private void alertError(int message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+        builder.create().show();
     }
 }
