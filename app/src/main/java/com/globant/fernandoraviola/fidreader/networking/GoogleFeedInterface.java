@@ -1,7 +1,6 @@
 package com.globant.fernandoraviola.fidreader.networking;
 
 import com.globant.fernandoraviola.fidreader.networking.response.FeedResponse;
-
 import retrofit.Callback;
 import retrofit.http.GET;
 

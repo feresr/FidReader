@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-
 import com.globant.fernandoraviola.fidreader.R;
 import com.globant.fernandoraviola.fidreader.fragments.FeedFragment;
 import com.globant.fernandoraviola.fidreader.fragments.NavigationDrawerFragment;

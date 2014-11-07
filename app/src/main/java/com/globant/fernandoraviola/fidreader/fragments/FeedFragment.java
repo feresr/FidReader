@@ -2,7 +2,6 @@ package com.globant.fernandoraviola.fidreader.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
 import com.globant.fernandoraviola.fidreader.R;
 import com.globant.fernandoraviola.fidreader.activities.MainActivity;
 import com.globant.fernandoraviola.fidreader.adapters.FeedAdapter;
@@ -20,9 +18,7 @@ import com.globant.fernandoraviola.fidreader.models.Feed;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedClient;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedInterface;
 import com.globant.fernandoraviola.fidreader.networking.response.FeedResponse;
-
 import java.util.ArrayList;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
