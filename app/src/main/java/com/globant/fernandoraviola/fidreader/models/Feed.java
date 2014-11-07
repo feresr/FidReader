@@ -2,9 +2,8 @@ package com.globant.fernandoraviola.fidreader.models;
 
 /**
  * Created by fernando.raviola on 11/4/2014.
- *
+ * <p/>
  * Stores all attributes and methods related to a specific Feed.
- *
  */
 public class Feed {
 

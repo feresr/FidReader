@@ -2,17 +2,15 @@ package com.globant.fernandoraviola.fidreader.networking.response;
 
 /**
  * Created by fernando.raviola on 11/4/2014.
- *
+ * <p/>
  * Stores all attributes and methods related to a specific FeedResponse.
  * FeedResponse is the Model representation of the JSON response returned by the API.
- *
  */
 public class FeedResponse {
 
     private String responseDetails;
     private String responseStatus;
     private FeedResponseData responseData;
-
 
     public String getResponseDetails() {
         return responseDetails;

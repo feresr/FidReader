@@ -6,7 +6,7 @@ import retrofit.RestAdapter;
 
 /**
  * Created by fernando.raviola on 11/4/2014.
- *
+ * <p/>
  * The purpose of this class is to provide basic configuration to retrofit.
  * It provides the API end-point, log levels, http interceptors, among others.
  */
