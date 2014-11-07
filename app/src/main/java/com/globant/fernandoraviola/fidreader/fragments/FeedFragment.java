@@ -2,6 +2,7 @@ package com.globant.fernandoraviola.fidreader.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,19 +12,17 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
-
-import com.globant.fernandoraviola.fidreader.adapters.FeedAdapter;
-import com.globant.fernandoraviola.fidreader.activities.MainActivity;
 import com.globant.fernandoraviola.fidreader.R;
+import com.globant.fernandoraviola.fidreader.activities.MainActivity;
+import com.globant.fernandoraviola.fidreader.adapters.FeedAdapter;
+import com.globant.fernandoraviola.fidreader.models.Feed;
+import com.globant.fernandoraviola.fidreader.networking.GoogleFeedClient;
+import com.globant.fernandoraviola.fidreader.networking.GoogleFeedInterface;
+import com.globant.fernandoraviola.fidreader.networking.response.FeedResponse;
 
 import java.util.ArrayList;
 
-import com.globant.fernandoraviola.fidreader.networking.GoogleFeedClient;
-import com.globant.fernandoraviola.fidreader.networking.GoogleFeedInterface;
-import com.globant.fernandoraviola.fidreader.models.Feed;
-import com.globant.fernandoraviola.fidreader.networking.response.FeedResponse;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -35,10 +34,8 @@ public class FeedFragment extends Fragment implements AbsListView.OnItemClickLis
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String SECTION = "section";
-    GoogleFeedInterface mFeedInterface = GoogleFeedClient.getGoogleFeedInterface(getActivity());
-
     public ArrayList<Feed> feeds = new ArrayList<Feed>();
-
+    GoogleFeedInterface mFeedInterface = GoogleFeedClient.getGoogleFeedInterface(getActivity());
     private int section;
 
     private OnFragmentInteractionListener mListener;
@@ -54,19 +51,19 @@ public class FeedFragment extends Fragment implements AbsListView.OnItemClickLis
      */
     private FeedAdapter mAdapter;
 
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
+    public FeedFragment() {
+    }
+
     public static FeedFragment newInstance(int section) {
         FeedFragment fragment = new FeedFragment();
         Bundle args = new Bundle();
         args.putInt(SECTION, section);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public FeedFragment() {
     }
 
     @Override
@@ -130,34 +127,6 @@ public class FeedFragment extends Fragment implements AbsListView.OnItemClickLis
         }
     }
 
-    /**
-     * The default content for this Fragment has a TextView that is shown when
-     * the list is empty. If you would like to change the text, call this method
-     * to supply the text it should use.
-     */
-    public void setEmptyText(CharSequence emptyText) {
-        View emptyView = mListView.getEmptyView();
-
-        if (emptyText instanceof TextView) {
-            ((TextView) emptyView).setText(emptyText);
-        }
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-
-        public void onFragmentInteraction(String id);
-    }
-
     private void fetchFeeds() {
         mFeedInterface.getFeeds(new Callback<FeedResponse>() {
             @Override
@@ -183,12 +152,30 @@ public class FeedFragment extends Fragment implements AbsListView.OnItemClickLis
     }
 
     private void alertError(int message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(message)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                    }
-                });
-        builder.create().show();
+        // getActivity could return null if the device is rotated and the activity restored.
+        if(getActivity() != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(message)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    });
+            builder.create().show();
+        }
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+
+        public void onFragmentInteraction(String id);
     }
 }

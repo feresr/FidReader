@@ -1,12 +1,12 @@
 package com.globant.fernandoraviola.fidreader.activities;
 
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +18,9 @@ import com.globant.fernandoraviola.fidreader.R;
 import com.globant.fernandoraviola.fidreader.fragments.FeedFragment;
 import com.globant.fernandoraviola.fidreader.fragments.NavigationDrawerFragment;
 
+/**
+ * Acts as the main entry point for the application.
+ */
 public class MainActivity extends FragmentActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, FeedFragment.OnFragmentInteractionListener {
 
@@ -31,7 +34,6 @@ public class MainActivity extends FragmentActivity
      */
     private CharSequence mTitle;
     private static final String TAG = MainActivity.class.getSimpleName();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,17 +49,16 @@ public class MainActivity extends FragmentActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // Update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
-        switch (position){
+        switch (position) {
             case 0:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, FeedFragment.newInstance(position + 1))
+                        .replace(R.id.container, FeedFragment.newInstance(position))
                         .commit();
                 break;
             default:
@@ -68,6 +69,7 @@ public class MainActivity extends FragmentActivity
     }
 
     public void onSectionAttached(int number) {
+
         switch (number) {
             case 0:
                 mTitle = getString(R.string.title_section1);
@@ -87,7 +89,6 @@ public class MainActivity extends FragmentActivity
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -117,9 +118,6 @@ public class MainActivity extends FragmentActivity
     @Override
     public void onFragmentInteraction(String id) {
     }
-
-
-
 
     /**
      * A placeholder fragment containing a simple view.

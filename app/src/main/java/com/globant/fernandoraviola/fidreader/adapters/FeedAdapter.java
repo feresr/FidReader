@@ -6,16 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 
 import com.globant.fernandoraviola.fidreader.models.Feed;
 
 /**
  * Created by fernando.raviola on 11/5/2014.
- *
+ * <p/>
  * Adapter for feeds
  * Configures the way Feeds appear on the listview
- *
  */
 public class FeedAdapter extends BaseAdapter {
 
@@ -77,8 +77,7 @@ public class FeedAdapter extends BaseAdapter {
 
         public FeedViewHolder(View view) {
             this.feedTitle = (TextView) view.findViewById(android.R.id.text1);
-            this.feedLink = (TextView) view.findViewById(android.R.id.text2);;
+            this.feedLink = (TextView) view.findViewById(android.R.id.text2);
         }
     }
-
 }
