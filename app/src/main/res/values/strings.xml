@@ -13,5 +13,7 @@
     <string name="retrofit_network_error">No internet connection. Please, make sure you\'re connected to a network that has internet access.</string>
     <string name="no_feed_message">There are no feeds yet. Add some! :)</string>
     <string name="off_line_message">You\'re not connected to any network. Please turn on Wifi/data and try again.</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="loading_feeds">Loading feeds&#8230;</string>
 
 </resources>
