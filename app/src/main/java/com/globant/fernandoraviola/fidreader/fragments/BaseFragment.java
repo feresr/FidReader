@@ -13,11 +13,13 @@ public class BaseFragment extends Fragment {
     protected ProgressDialog mDialog;
 
     protected void showProgressDialog(int message) {
-        mDialog = new ProgressDialog(getActivity());
-        mDialog.setIndeterminate(false);
-        mDialog.setCancelable(false);
-        mDialog.setMessage(getString(message));
-        mDialog.show();
+        if (getActivity() != null) {
+            mDialog = new ProgressDialog(getActivity());
+            mDialog.setIndeterminate(false);
+            mDialog.setCancelable(false);
+            mDialog.setMessage(getString(message));
+            mDialog.show();
+        }
     }
 
     protected void dismissProgressDialog() {
