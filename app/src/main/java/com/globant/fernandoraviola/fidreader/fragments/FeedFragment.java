@@ -69,7 +69,7 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
         if (getArguments() != null) {
             section = getArguments().getInt(SECTION);
         }
-        mDialog = new ProgressDialog(getActivity());
+
         mAdapter = new FeedAdapter(getActivity(),
                 android.R.layout.simple_list_item_2, feeds);
 

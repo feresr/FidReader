@@ -7,6 +7,10 @@ import android.support.v4.app.Fragment;
 
 /**
  * Created by fernando.raviola on 11/10/2014.
+ *
+ * This is intended as a base class for all fragments in the application and provides basic
+ * functionality that should be present in all of them.
+ *
  */
 public class BaseFragment extends Fragment {
 
