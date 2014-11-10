@@ -1,16 +1,15 @@
 package com.globant.fernandoraviola.fidreader.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
 import com.globant.fernandoraviola.fidreader.R;
 import com.globant.fernandoraviola.fidreader.activities.MainActivity;
 import com.globant.fernandoraviola.fidreader.adapters.FeedAdapter;
@@ -18,7 +17,9 @@ import com.globant.fernandoraviola.fidreader.models.Feed;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedClient;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedInterface;
 import com.globant.fernandoraviola.fidreader.networking.response.FeedResponse;
+
 import java.util.ArrayList;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -26,14 +27,13 @@ import retrofit.client.Response;
 /**
  * A fragment representing a list of Feeds.
  */
-public class FeedFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class FeedFragment extends BaseFragment implements AbsListView.OnItemClickListener {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String SECTION = "section";
-    public ArrayList<Feed> feeds = new ArrayList<Feed>();
-    GoogleFeedInterface mFeedInterface = GoogleFeedClient.getGoogleFeedInterface(getActivity());
+    private ArrayList<Feed> feeds = new ArrayList<Feed>();
+    private GoogleFeedInterface mFeedInterface = GoogleFeedClient.getGoogleFeedInterface();
     private int section;
-
     private OnFragmentInteractionListener mListener;
 
     /**
@@ -112,6 +112,7 @@ public class FeedFragment extends Fragment implements AbsListView.OnItemClickLis
     public void onResume() {
         super.onResume();
         fetchFeeds();
+        showProgressDialog(R.string.loading_feeds);
     }
 
     @Override
@@ -129,36 +130,27 @@ public class FeedFragment extends Fragment implements AbsListView.OnItemClickLis
             public void success(FeedResponse feedResponse, Response response) {
                 feeds = feedResponse.getResponseData().getEntries();
                 mAdapter.updateFeeds(feeds);
+                dismissProgressDialog();
             }
 
             @Override
             public void failure(RetrofitError error) {
 
+                dismissProgressDialog();
+
                 /** The request wasn't able to reach the server. */
                 if (error.getKind() == RetrofitError.Kind.NETWORK) {
-                    alertError(R.string.retrofit_network_error);
+                    showErrorDialog(R.string.retrofit_network_error);
                 }
 
                 /** A non-200 HTTP status code was received from the server. */
                 if (error.getKind() == RetrofitError.Kind.HTTP) {
-                    alertError(R.string.retrofit_http_error);
+                    showErrorDialog(R.string.retrofit_http_error);
                 }
             }
         });
     }
 
-    private void alertError(int message) {
-        // getActivity could return null if the device is rotated and the activity restored.
-        if(getActivity() != null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage(message)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                        }
-                    });
-            builder.create().show();
-        }
-    }
 
     /**
      * This interface must be implemented by activities that contain this

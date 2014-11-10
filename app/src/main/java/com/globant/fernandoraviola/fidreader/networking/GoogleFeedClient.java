@@ -18,7 +18,7 @@ public class GoogleFeedClient {
     /**
      * @return GoogleFeedInterface - The interface necessary to interact with the Google feed API
      */
-    public static GoogleFeedInterface getGoogleFeedInterface(final Context context) {
+    public static GoogleFeedInterface getGoogleFeedInterface() {
         if (mFeedInterface == null) {
 
             RestAdapter restAdapter = new RestAdapter.Builder()
