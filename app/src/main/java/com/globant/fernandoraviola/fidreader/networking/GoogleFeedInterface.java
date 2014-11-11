@@ -3,6 +3,7 @@ package com.globant.fernandoraviola.fidreader.networking;
 import com.globant.fernandoraviola.fidreader.networking.response.FeedResponse;
 import retrofit.Callback;
 import retrofit.http.GET;
+import retrofit.http.Query;
 
 /**
  * Created by fernando.raviola on 11/4/2014.
@@ -11,7 +12,7 @@ import retrofit.http.GET;
  */
 public interface GoogleFeedInterface {
 
-    final static String URL_FIND_FEEDS = "/find?v=1.0&q=Android";
+    final static String URL_FIND_FEEDS = "/find?v=1.0";
 
     /**
      * Get a list of feeds to subscribe to.
@@ -19,6 +20,6 @@ public interface GoogleFeedInterface {
      * @param callback
      */
     @GET(URL_FIND_FEEDS)
-    public void getFeeds(Callback<FeedResponse> callback);
+    public void getFeeds(@Query("q") String keyword,Callback<FeedResponse> callback);
 
 }

@@ -1,19 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="10sp"
     tools:context="com.globant.fernandoraviola.fidreader.fragments.FeedFragment">
 
+    <EditText
+        android:id="@+id/keyword_search_editText"
+        android:layout_width="match_parent"
+        android:hint="@string/keyword_input_hint"
+        android:singleLine="true"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/keyword_search_button"
+        android:layout_below="@id/keyword_search_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10sp"
+        android:text="@string/search"/>
+
     <TextView
+        android:layout_below="@id/keyword_search_button"
         android:id="@android:id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
-        android:text="@string/no_feed_message"
+        android:text="@string/search_feeds_message"
         android:gravity="center" />
 
     <ListView
+        android:layout_below="@id/keyword_search_button"
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,4 +38,4 @@
 
 
 
-</FrameLayout>
+</RelativeLayout>

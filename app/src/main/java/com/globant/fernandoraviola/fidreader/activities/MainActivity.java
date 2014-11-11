@@ -12,16 +12,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.globant.fernandoraviola.fidreader.Navigator;
 import com.globant.fernandoraviola.fidreader.R;
 import com.globant.fernandoraviola.fidreader.fragments.FeedFragment;
 import com.globant.fernandoraviola.fidreader.fragments.NavigationDrawerFragment;
+import com.globant.fernandoraviola.fidreader.helpers.Navigator;
 
 /**
  * Acts as the main entry point for the application.
  */
 public class MainActivity extends FragmentActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FeedFragment.OnFragmentInteractionListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -87,9 +87,10 @@ public class MainActivity extends FragmentActivity
 
     public void restoreActionBar() {
         ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(mTitle);
+        }
     }
 
     @Override
@@ -115,10 +116,6 @@ public class MainActivity extends FragmentActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onFragmentInteraction(String id) {
     }
 
     /**
