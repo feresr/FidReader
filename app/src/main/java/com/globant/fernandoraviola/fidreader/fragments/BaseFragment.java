@@ -1,5 +1,6 @@
 package com.globant.fernandoraviola.fidreader.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -15,6 +16,7 @@ public class BaseFragment extends Fragment {
 
     protected ProgressDialog mProgressDialog;
     protected AlertDialog mErrorDialog;
+    protected NavigationDrawerFragment.NavigationDrawerCallbacks mActivity;
 
     protected void showProgressDialog(int message) {
         if (getActivity() != null) {
@@ -50,6 +52,22 @@ public class BaseFragment extends Fragment {
         if (mErrorDialog != null && mErrorDialog.isShowing()) {
             mErrorDialog.dismiss();
         }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mActivity = (NavigationDrawerFragment.NavigationDrawerCallbacks) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement NavigationDrawerCallbacks");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mActivity = null;
     }
 
     @Override

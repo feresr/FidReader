@@ -14,5 +14,7 @@
     <string name="no_feed_message">There are no feeds yet. Add some! :)</string>
     <string name="off_line_message">You\'re not connected to any network. Please turn on Wifi/data and try again.</string>
     <string name="loading_feeds">Loading feeds</string>
+    <string name="keyword_input_title">Search feeds by keyword</string>
+    <string name="keyword_input_hint">Android, economics, argentina</string>
 
 </resources>

@@ -1,9 +1,11 @@
-package com.globant.fernandoraviola.fidreader;
+package com.globant.fernandoraviola.fidreader.helpers;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+
+import com.globant.fernandoraviola.fidreader.R;
 
 /**
  * Created by fernando.raviola on 11/10/2014.

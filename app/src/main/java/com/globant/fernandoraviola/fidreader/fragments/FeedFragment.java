@@ -1,17 +1,19 @@
 package com.globant.fernandoraviola.fidreader.fragments;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.globant.fernandoraviola.fidreader.R;
-import com.globant.fernandoraviola.fidreader.activities.MainActivity;
 import com.globant.fernandoraviola.fidreader.adapters.FeedAdapter;
 import com.globant.fernandoraviola.fidreader.models.Feed;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedClient;
@@ -34,7 +36,7 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
     private ArrayList<Feed> feeds = new ArrayList<Feed>();
     private GoogleFeedInterface mFeedInterface = GoogleFeedClient.getGoogleFeedInterface();
     private int section;
-    private OnFragmentInteractionListener mListener;
+    private AlertDialog keywordInputDialog;
 
     /**
      * The fragment's ListView/GridView.
@@ -73,6 +75,7 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
         mAdapter = new FeedAdapter(getActivity(),
                 android.R.layout.simple_list_item_2, feeds);
 
+        createKeywordInputDialog();
     }
 
     @Override
@@ -93,39 +96,25 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-            ((MainActivity) activity).onSectionAttached(section);
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+        mActivity.onSectionAttached(section);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        fetchFeeds();
-        showProgressDialog(R.string.loading_feeds);
+        showKeywordInputDialog();
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction("1");
-        }
+        //TODO: to be implemented.
     }
 
-    private void fetchFeeds() {
-        mFeedInterface.getFeeds(new Callback<FeedResponse>() {
+    private void fetchFeeds(String keyword) {
+
+        showProgressDialog(R.string.loading_feeds);
+
+        mFeedInterface.getFeeds(keyword, new Callback<FeedResponse>() {
             @Override
             public void success(FeedResponse feedResponse, Response response) {
                 feeds = feedResponse.getResponseData().getEntries();
@@ -151,19 +140,43 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
         });
     }
 
+    private void showKeywordInputDialog() {
+        if (keywordInputDialog != null && !keywordInputDialog.isShowing()) {
+            keywordInputDialog.show();
+        }
+    }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
+    private void createKeywordInputDialog() {
 
-        public void onFragmentInteraction(String id);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.keyword_input_title);
+
+        // Set up the input
+        final EditText input = new EditText(getActivity());
+        input.setHint(R.string.keyword_input_hint);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                fetchFeeds(input.getText().toString());
+            }
+        });
+
+        keywordInputDialog = builder.create();
+    }
+
+    private void dismissKeywordInputDialog() {
+        if (keywordInputDialog != null && keywordInputDialog.isShowing()) {
+            keywordInputDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        dismissKeywordInputDialog();
     }
 }
