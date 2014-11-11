@@ -1,17 +1,15 @@
 package com.globant.fernandoraviola.fidreader.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.globant.fernandoraviola.fidreader.R;
 import com.globant.fernandoraviola.fidreader.adapters.FeedAdapter;
@@ -36,8 +34,9 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
     private ArrayList<Feed> feeds = new ArrayList<Feed>();
     private GoogleFeedInterface mFeedInterface = GoogleFeedClient.getGoogleFeedInterface();
     private int section;
-    private AlertDialog keywordInputDialog;
-
+    private Button searchBtn;
+    private TextView searchTxt;
+    
     /**
      * The fragment's ListView/GridView.
      */
@@ -81,8 +80,6 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
-        createKeywordInputDialog();
-
         // Set the adapter
         mListView = (ListView) view.findViewById(android.R.id.list);
         mListView.setAdapter(mAdapter);
@@ -90,6 +87,22 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
+
+        searchBtn = (Button) view.findViewById(R.id.keyword_search_button);
+        searchTxt = (TextView) view.findViewById(R.id.keyword_search_editText);
+
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String keyword = searchTxt.getText().toString();
+                if (!keyword.isEmpty()) {
+                    fetchFeeds(keyword);
+                } else {
+                    searchTxt.setError("Missing keywords");
+                }
+            }
+        });
+
         return view;
     }
 
@@ -97,12 +110,6 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mActivity.onSectionAttached(section);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        showKeywordInputDialog();
     }
 
     @Override
@@ -140,43 +147,4 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
         });
     }
 
-    private void showKeywordInputDialog() {
-        if (keywordInputDialog != null && !keywordInputDialog.isShowing()) {
-            keywordInputDialog.show();
-        }
-    }
-
-    private void createKeywordInputDialog() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.keyword_input_title);
-
-        // Set up the input
-        final EditText input = new EditText(getActivity());
-        input.setHint(R.string.keyword_input_hint);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
-        builder.setCancelable(false);
-        // Set up the buttons
-        builder.setPositiveButton(R.string.search, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                fetchFeeds(input.getText().toString());
-            }
-        });
-
-        keywordInputDialog = builder.create();
-    }
-
-    private void dismissKeywordInputDialog() {
-        if (keywordInputDialog != null && keywordInputDialog.isShowing()) {
-            keywordInputDialog.dismiss();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        dismissKeywordInputDialog();
-    }
 }
