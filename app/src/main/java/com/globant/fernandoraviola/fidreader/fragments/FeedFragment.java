@@ -74,14 +74,14 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
 
         mAdapter = new FeedAdapter(getActivity(),
                 android.R.layout.simple_list_item_2, feeds);
-
-        createKeywordInputDialog();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
+
+        createKeywordInputDialog();
 
         // Set the adapter
         mListView = (ListView) view.findViewById(android.R.id.list);
@@ -156,9 +156,9 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
         input.setHint(R.string.keyword_input_hint);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
-
+        builder.setCancelable(false);
         // Set up the buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.search, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 fetchFeeds(input.getText().toString());
