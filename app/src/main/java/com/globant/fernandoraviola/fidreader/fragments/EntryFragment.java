@@ -1,14 +1,15 @@
 package com.globant.fernandoraviola.fidreader.fragments;
 
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.globant.fernandoraviola.fidreader.R;
-import com.globant.fernandoraviola.fidreader.models.Entry;
+import com.globant.fernandoraviola.fidreader.adapters.EntryAdapter;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedClient;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedInterface;
 import com.globant.fernandoraviola.fidreader.networking.response.EntryResponse;
@@ -29,13 +30,18 @@ public class EntryFragment extends BaseFragment {
     private static final String FEED_URL = "url";
     private GoogleFeedInterface mFeedInterface = GoogleFeedClient.getGoogleFeedInterface();
     private String feedUrl;
+    private EntryAdapter adapter;
+    private ListView listView;
+
+    public EntryFragment() {
+        // Required empty public constructor
+    }
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
      * @param feedUrl feed url.
-     *
      * @return A new instance of fragment EntryFragment.
      */
     public static EntryFragment newInstance(String feedUrl) {
@@ -46,41 +52,42 @@ public class EntryFragment extends BaseFragment {
         return fragment;
     }
 
-    public EntryFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             feedUrl = getArguments().getString(FEED_URL);
         }
+
+        adapter = new EntryAdapter(getActivity(), R.layout.entry_item);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //get entries to populate list view
+        View view = inflater.inflate(R.layout.fragment_entry, container, false);
+        listView = (ListView) view.findViewById(android.R.id.list);
+        listView.setAdapter(adapter);
+        listView.setEmptyView(view.findViewById(android.R.id.empty));
         loadFeed();
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_entry, container, false);
+        return view;
     }
 
-    public void loadFeed(){
+    public void loadFeed() {
+        showProgressDialog(R.string.loading_entries);
         mFeedInterface.loadFeed(feedUrl, new Callback<EntryResponse>() {
             @Override
             public void success(EntryResponse entryResponse, Response response) {
-                for (Entry entry : entryResponse.getResponseData().getFeed().getEntries()) {
-                    //TODO: Update adapter with new info
-                    Log.e("TEST", entry.getContentSnippet());
-                }
-
+                dismissProgressDialog();
+                adapter.updateFeeds(entryResponse.getResponseData().getFeed().getEntries());
             }
 
             @Override
             public void failure(RetrofitError error) {
+                dismissProgressDialog();
                 //TODO: Error handling:
                 Log.e("RETROFIT ERROR", error.toString());
             }

@@ -13,12 +13,9 @@ import android.widget.TextView;
 
 import com.globant.fernandoraviola.fidreader.R;
 import com.globant.fernandoraviola.fidreader.adapters.FeedAdapter;
-import com.globant.fernandoraviola.fidreader.models.Feed;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedClient;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedInterface;
 import com.globant.fernandoraviola.fidreader.networking.response.FeedResponse;
-
-import java.util.ArrayList;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
