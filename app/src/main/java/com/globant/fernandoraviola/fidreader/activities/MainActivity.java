@@ -21,7 +21,7 @@ import com.globant.fernandoraviola.fidreader.helpers.Navigator;
  * Acts as the main entry point for the application.
  */
 public class MainActivity extends FragmentActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentInteractionsInterface {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -116,6 +116,11 @@ public class MainActivity extends FragmentActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void pushFragment(Fragment fragment, String tag, boolean addToBackstack) {
+        navigator.pushFragment(fragment, tag, addToBackstack);
     }
 
     /**

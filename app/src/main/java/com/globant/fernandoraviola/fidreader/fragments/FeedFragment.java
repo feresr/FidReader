@@ -36,7 +36,7 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
     private int section;
     private Button searchBtn;
     private TextView searchTxt;
-    
+
     /**
      * The fragment's ListView/GridView.
      */
@@ -72,7 +72,7 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
         }
 
         mAdapter = new FeedAdapter(getActivity(),
-                android.R.layout.simple_list_item_2, feeds);
+                android.R.layout.simple_list_item_2);
     }
 
     @Override

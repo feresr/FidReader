@@ -6,6 +6,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 
+import com.globant.fernandoraviola.fidreader.activities.FragmentInteractionsInterface;
+
 /**
  * Created by fernando.raviola on 11/10/2014.
  * <p/>
@@ -16,7 +18,7 @@ public class BaseFragment extends Fragment {
 
     protected ProgressDialog mProgressDialog;
     protected AlertDialog mErrorDialog;
-    protected NavigationDrawerFragment.NavigationDrawerCallbacks mActivity;
+    protected FragmentInteractionsInterface mActivity;
 
     protected void showProgressDialog(int message) {
         if (getActivity() != null) {
@@ -58,9 +60,9 @@ public class BaseFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mActivity = (NavigationDrawerFragment.NavigationDrawerCallbacks) activity;
+            mActivity = (FragmentInteractionsInterface) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement NavigationDrawerCallbacks");
+            throw new ClassCastException(activity.toString() + " must implement FragmentInteractionsInterface");
         }
     }
 

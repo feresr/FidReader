@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
+
 import com.globant.fernandoraviola.fidreader.R;
 
 /**
@@ -267,7 +267,5 @@ public class NavigationDrawerFragment extends Fragment {
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(int position);
-
-        void onSectionAttached(int section);
     }
 }
