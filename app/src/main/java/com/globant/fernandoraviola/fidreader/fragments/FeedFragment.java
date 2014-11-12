@@ -31,7 +31,6 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String SECTION = "section";
-    private ArrayList<Feed> feeds = new ArrayList<Feed>();
     private GoogleFeedInterface mFeedInterface = GoogleFeedClient.getGoogleFeedInterface();
     private int section;
     private Button searchBtn;
@@ -114,7 +113,8 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //TODO: to be implemented.
+        //TODO: check mAdapter.getItem(position).getUrl()
+        mActivity.pushFragment(EntryFragment.newInstance(mAdapter.getItem(position).getUrl()), null, true);
     }
 
     private void fetchFeeds(String keyword) {
@@ -124,8 +124,7 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
         mFeedInterface.getFeeds(keyword, new Callback<FeedResponse>() {
             @Override
             public void success(FeedResponse feedResponse, Response response) {
-                feeds = feedResponse.getResponseData().getEntries();
-                mAdapter.updateFeeds(feeds);
+                mAdapter.updateFeeds(feedResponse.getResponseData().getEntries());
                 dismissProgressDialog();
             }
 
