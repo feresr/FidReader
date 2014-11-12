@@ -1,5 +1,7 @@
 package com.globant.fernandoraviola.fidreader.models;
 
+import java.util.ArrayList;
+
 /**
  * Created by fernando.raviola on 11/4/2014.
  * <p/>
@@ -11,6 +13,8 @@ public class Feed {
     private String title;
     private String contentSnippet;
     private String link;
+    private String description;
+    private ArrayList<Entry> entries;
 
     public String getUrl() {
         return url;
@@ -44,8 +48,11 @@ public class Feed {
         this.link = link;
     }
 
-    @Override
-    public String toString() {
-        return title + " -- url: " + url;
+    public ArrayList<Entry> getEntries() {
+        return entries;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
