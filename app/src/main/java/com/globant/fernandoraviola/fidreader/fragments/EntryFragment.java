@@ -2,7 +2,6 @@ package com.globant.fernandoraviola.fidreader.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,7 @@ import retrofit.client.Response;
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
+ * Activities that contain this fragment must implement the FragmentInteractionInterface
  * to handle interaction events.
  * Use the {@link EntryFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -70,10 +69,16 @@ public class EntryFragment extends BaseFragment {
         listView = (ListView) view.findViewById(android.R.id.list);
         listView.setAdapter(adapter);
         listView.setEmptyView(view.findViewById(android.R.id.empty));
-        loadFeed();
 
         // Inflate the layout for this fragment
         return view;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadFeed();
     }
 
     public void loadFeed() {
@@ -88,8 +93,16 @@ public class EntryFragment extends BaseFragment {
             @Override
             public void failure(RetrofitError error) {
                 dismissProgressDialog();
-                //TODO: Error handling:
-                Log.e("RETROFIT ERROR", error.toString());
+
+                /** The request wasn't able to reach the server. */
+                if (error.getKind() == RetrofitError.Kind.NETWORK) {
+                    showErrorDialog(R.string.retrofit_network_error);
+                }
+
+                /** A non-200 HTTP status code was received from the server. */
+                if (error.getKind() == RetrofitError.Kind.HTTP) {
+                    showErrorDialog(R.string.retrofit_http_error);
+                }
             }
         });
     }

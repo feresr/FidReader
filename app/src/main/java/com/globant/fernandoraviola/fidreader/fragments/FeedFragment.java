@@ -111,7 +111,7 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         //TODO: check mAdapter.getItem(position).getUrl()
-        mActivity.pushFragment(EntryFragment.newInstance(mAdapter.getItem(position).getUrl()), null, true);
+        mActivity.showFeedEntries(mAdapter.getItem(position).getUrl());
     }
 
     private void fetchFeeds(String keyword) {

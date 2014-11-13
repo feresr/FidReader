@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.globant.fernandoraviola.fidreader.R;
+import com.globant.fernandoraviola.fidreader.fragments.EntryFragment;
 import com.globant.fernandoraviola.fidreader.fragments.FeedFragment;
 import com.globant.fernandoraviola.fidreader.fragments.NavigationDrawerFragment;
 import com.globant.fernandoraviola.fidreader.helpers.Navigator;
@@ -119,8 +120,8 @@ public class MainActivity extends FragmentActivity
     }
 
     @Override
-    public void pushFragment(Fragment fragment, String tag, boolean addToBackstack) {
-        navigator.pushFragment(fragment, tag, addToBackstack);
+    public void showFeedEntries(String feedUrl) {
+        navigator.pushFragment(EntryFragment.newInstance(feedUrl), null, true);
     }
 
     /**

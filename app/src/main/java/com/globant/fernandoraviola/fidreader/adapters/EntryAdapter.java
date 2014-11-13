@@ -13,7 +13,11 @@ import java.util.ArrayList;
 
 /**
  * Created by fernando.raviola on 11/12/2014.
+ * <p/>
+ * Adapter for entries
+ * Configures the way Entries appear on EntryFragment
  */
+
 public class EntryAdapter extends BaseAdapter {
 
     private Context context;
