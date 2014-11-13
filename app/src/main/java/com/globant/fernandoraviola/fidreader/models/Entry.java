@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by fernando.raviola on 11/4/2014.
  * <p/>
- * Stores all attributes and methods related to a specific Entry.
+ * Model class that represents a Feed entry
  */
 public class Entry {
 
