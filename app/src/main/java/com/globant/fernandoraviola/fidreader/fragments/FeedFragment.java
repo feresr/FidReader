@@ -13,12 +13,9 @@ import android.widget.TextView;
 
 import com.globant.fernandoraviola.fidreader.R;
 import com.globant.fernandoraviola.fidreader.adapters.FeedAdapter;
-import com.globant.fernandoraviola.fidreader.models.Feed;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedClient;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedInterface;
 import com.globant.fernandoraviola.fidreader.networking.response.FeedResponse;
-
-import java.util.ArrayList;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -31,12 +28,11 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String SECTION = "section";
-    private ArrayList<Feed> feeds = new ArrayList<Feed>();
     private GoogleFeedInterface mFeedInterface = GoogleFeedClient.getGoogleFeedInterface();
     private int section;
     private Button searchBtn;
     private TextView searchTxt;
-    
+
     /**
      * The fragment's ListView/GridView.
      */
@@ -72,7 +68,7 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
         }
 
         mAdapter = new FeedAdapter(getActivity(),
-                android.R.layout.simple_list_item_2, feeds);
+                android.R.layout.simple_list_item_2);
     }
 
     @Override
@@ -109,12 +105,12 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mActivity.onSectionAttached(section);
+        fragmentInteractionsListener.onSectionAttached(section);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //TODO: to be implemented.
+        fragmentInteractionsListener.showFeedEntries(mAdapter.getItem(position).getUrl());
     }
 
     private void fetchFeeds(String keyword) {
@@ -124,8 +120,7 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
         mFeedInterface.getFeeds(keyword, new Callback<FeedResponse>() {
             @Override
             public void success(FeedResponse feedResponse, Response response) {
-                feeds = feedResponse.getResponseData().getEntries();
-                mAdapter.updateFeeds(feeds);
+                mAdapter.updateFeeds(feedResponse.getResponseData().getEntries());
                 dismissProgressDialog();
             }
 

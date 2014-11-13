@@ -9,9 +9,8 @@ import com.globant.fernandoraviola.fidreader.R;
 
 /**
  * Created by fernando.raviola on 11/10/2014.
- *
+ * <p/>
  * Helper class to navigate between fragments
- *
  */
 public class Navigator {
 

@@ -6,9 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import java.util.ArrayList;
 
 import com.globant.fernandoraviola.fidreader.models.Feed;
+
+import java.util.ArrayList;
 
 /**
  * Created by fernando.raviola on 11/5/2014.
@@ -22,10 +23,9 @@ public class FeedAdapter extends BaseAdapter {
     private Context context;
     private int resource;
 
-    public FeedAdapter(Context context, int resource, ArrayList<Feed> feeds) {
+    public FeedAdapter(Context context, int resource) {
         this.context = context;
         this.resource = resource;
-        this.feeds = feeds;
     }
 
     @Override

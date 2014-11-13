@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.globant.fernandoraviola.fidreader.R;
+import com.globant.fernandoraviola.fidreader.fragments.EntryFragment;
 import com.globant.fernandoraviola.fidreader.fragments.FeedFragment;
 import com.globant.fernandoraviola.fidreader.fragments.NavigationDrawerFragment;
 import com.globant.fernandoraviola.fidreader.helpers.Navigator;
@@ -21,7 +22,7 @@ import com.globant.fernandoraviola.fidreader.helpers.Navigator;
  * Acts as the main entry point for the application.
  */
 public class MainActivity extends FragmentActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentInteractionsInterface {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -116,6 +117,11 @@ public class MainActivity extends FragmentActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void showFeedEntries(String feedUrl) {
+        navigator.pushFragment(EntryFragment.newInstance(feedUrl), null, true);
     }
 
     /**

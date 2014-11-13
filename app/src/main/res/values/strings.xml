@@ -17,5 +17,6 @@
     <string name="keyword_input_title">Search feeds by keyword</string>
     <string name="keyword_input_hint">Enter topic, hobby, interest, etc.</string>
     <string name="search">SEARCH</string>
+    <string name="loading_entries">Loading entries</string>
 
 </resources>
