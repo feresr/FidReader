@@ -18,5 +18,7 @@
     <string name="keyword_input_hint">Enter topic, hobby, interest, etc.</string>
     <string name="search">SEARCH</string>
     <string name="loading_entries">Loading entries</string>
+    <string name="title_activity_feed">Feed</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

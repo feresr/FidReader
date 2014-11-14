@@ -4,38 +4,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10sp"
-    tools:context="com.globant.fernandoraviola.fidreader.fragments.FeedFragment">
+    tools:context="com.globant.fernandoraviola.fidreader.fragments.SearchFeedsFragment">
 
     <EditText
         android:id="@+id/keyword_search_editText"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:hint="@string/keyword_input_hint"
-        android:singleLine="true"
-        android:layout_height="wrap_content" />
+        android:singleLine="true" />
 
     <Button
         android:id="@+id/keyword_search_button"
-        android:layout_below="@id/keyword_search_editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/keyword_search_editText"
         android:layout_marginBottom="10sp"
-        android:text="@string/search"/>
+        android:text="@string/search" />
 
     <TextView
-        android:layout_below="@id/keyword_search_button"
         android:id="@android:id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/search_feeds_message"
-        android:gravity="center" />
+        android:layout_below="@id/keyword_search_button"
+        android:gravity="center"
+        android:text="@string/search_feeds_message" />
 
     <ListView
-        android:layout_below="@id/keyword_search_button"
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
-
+        android:layout_below="@id/keyword_search_button" />
 
 
 </RelativeLayout>

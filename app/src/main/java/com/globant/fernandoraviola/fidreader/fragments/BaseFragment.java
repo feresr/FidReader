@@ -18,7 +18,7 @@ public class BaseFragment extends Fragment {
 
     protected ProgressDialog mProgressDialog;
     protected AlertDialog mErrorDialog;
-    protected FragmentInteractionsInterface fragmentInteractionsListener;
+
 
     protected void showProgressDialog(int message) {
         if (getActivity() != null) {
@@ -56,21 +56,7 @@ public class BaseFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            fragmentInteractionsListener = (FragmentInteractionsInterface) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement FragmentInteractionsInterface");
-        }
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        fragmentInteractionsListener = null;
-    }
 
     @Override
     public void onPause() {
