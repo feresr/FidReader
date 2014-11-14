@@ -13,9 +13,12 @@ import android.widget.TextView;
 
 import com.globant.fernandoraviola.fidreader.R;
 import com.globant.fernandoraviola.fidreader.adapters.FeedAdapter;
+import com.globant.fernandoraviola.fidreader.models.Feed;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedClient;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedInterface;
 import com.globant.fernandoraviola.fidreader.networking.response.FeedResponse;
+
+import java.util.ArrayList;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -44,6 +47,10 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
      */
     private FeedAdapter mAdapter;
 
+    /**
+     * The listener used to save and load feeds upon state changes / rotation
+     */
+    private HeadlessFragment.HeadlessInterface headlessListener;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -99,6 +106,10 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
             }
         });
 
+        if (headlessListener.loadFeeds() != null) {
+            mAdapter.updateFeeds(headlessListener.loadFeeds());
+        }
+
         return view;
     }
 
@@ -106,6 +117,11 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         fragmentInteractionsListener.onSectionAttached(section);
+        try {
+            headlessListener = (HeadlessFragment.HeadlessInterface) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement HeadlessInterface");
+        }
     }
 
     @Override
@@ -120,7 +136,9 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
         mFeedInterface.getFeeds(keyword, new Callback<FeedResponse>() {
             @Override
             public void success(FeedResponse feedResponse, Response response) {
-                mAdapter.updateFeeds(feedResponse.getResponseData().getEntries());
+                ArrayList<Feed> feeds = feedResponse.getResponseData().getEntries();
+                mAdapter.updateFeeds(feeds);
+                headlessListener.saveFeeds(feeds);
                 dismissProgressDialog();
             }
 

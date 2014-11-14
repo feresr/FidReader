@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,14 +16,18 @@ import android.view.ViewGroup;
 import com.globant.fernandoraviola.fidreader.R;
 import com.globant.fernandoraviola.fidreader.fragments.EntryFragment;
 import com.globant.fernandoraviola.fidreader.fragments.FeedFragment;
+import com.globant.fernandoraviola.fidreader.fragments.HeadlessFragment;
 import com.globant.fernandoraviola.fidreader.fragments.NavigationDrawerFragment;
 import com.globant.fernandoraviola.fidreader.helpers.Navigator;
+import com.globant.fernandoraviola.fidreader.models.Feed;
+
+import java.util.ArrayList;
 
 /**
  * Acts as the main entry point for the application.
  */
 public class MainActivity extends FragmentActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentInteractionsInterface {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentInteractionsInterface, HeadlessFragment.HeadlessInterface {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -41,6 +46,11 @@ public class MainActivity extends FragmentActivity
      */
     private Navigator navigator;
 
+    /**
+     * Headless fragment used to preserve states between rotations
+     */
+    private HeadlessFragment headlessFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +66,16 @@ public class MainActivity extends FragmentActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        headlessFragment = (HeadlessFragment) fragmentManager
+                .findFragmentByTag(HeadlessFragment.TAG);
+
+        if (headlessFragment == null) {
+            headlessFragment = new HeadlessFragment();
+            fragmentManager.beginTransaction().add(headlessFragment,
+                    HeadlessFragment.TAG).commit();
+        }
 
     }
 
@@ -122,6 +142,16 @@ public class MainActivity extends FragmentActivity
     @Override
     public void showFeedEntries(String feedUrl) {
         navigator.pushFragment(EntryFragment.newInstance(feedUrl), null, true);
+    }
+
+    @Override
+    public void saveFeeds(ArrayList<Feed> feeds) {
+        headlessFragment.setFeeds(feeds);
+    }
+
+    @Override
+    public ArrayList<Feed> loadFeeds() {
+        return headlessFragment.getFeeds();
     }
 
     /**
