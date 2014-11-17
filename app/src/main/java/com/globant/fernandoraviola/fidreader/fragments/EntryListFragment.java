@@ -1,17 +1,22 @@
 package com.globant.fernandoraviola.fidreader.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.globant.fernandoraviola.fidreader.R;
+import com.globant.fernandoraviola.fidreader.activities.EntriesInterface;
 import com.globant.fernandoraviola.fidreader.adapters.EntryAdapter;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedClient;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedInterface;
 import com.globant.fernandoraviola.fidreader.networking.response.EntryResponse;
+
+import java.util.ArrayList;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -21,18 +26,24 @@ import retrofit.client.Response;
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the FragmentInteractionInterface
  * to handle interaction events.
- * Use the {@link EntryFragment#newInstance} factory method to
+ * Use the {@link EntryListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EntryFragment extends BaseFragment {
+public class EntryListFragment extends BaseFragment {
 
     private static final String FEED_URL = "url";
     private GoogleFeedInterface mFeedInterface = GoogleFeedClient.getGoogleFeedInterface();
     private String feedUrl;
     private EntryAdapter adapter;
     private ListView listView;
+    private EntriesInterface selectEntryListener;
 
-    public EntryFragment() {
+    /**
+     * The listener used to save and load feeds upon state changes / rotation
+     */
+    private HeadlessFragment.HeadlessEntriesInterface headlessListener;
+
+    public EntryListFragment() {
         // Required empty public constructor
     }
 
@@ -43,8 +54,8 @@ public class EntryFragment extends BaseFragment {
      * @param feedUrl feed url.
      * @return A new instance of fragment EntryFragment.
      */
-    public static EntryFragment newInstance(String feedUrl) {
-        EntryFragment fragment = new EntryFragment();
+    public static EntryListFragment newInstance(String feedUrl) {
+        EntryListFragment fragment = new EntryListFragment();
         Bundle args = new Bundle();
         args.putString(FEED_URL, feedUrl);
         fragment.setArguments(args);
@@ -69,16 +80,20 @@ public class EntryFragment extends BaseFragment {
         listView = (ListView) view.findViewById(android.R.id.list);
         listView.setAdapter(adapter);
         listView.setEmptyView(view.findViewById(android.R.id.empty));
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectEntryListener.showEntryDetails(adapter.getItem(position));
+            }
+        });
 
-        // Inflate the layout for this fragment
+        if (headlessListener.loadEntry() != null) {
+            adapter.updateFeeds(headlessListener.loadEntry());
+        } else {
+            loadFeed();
+        }
+
         return view;
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        loadFeed();
     }
 
     public void loadFeed() {
@@ -87,7 +102,9 @@ public class EntryFragment extends BaseFragment {
             @Override
             public void success(EntryResponse entryResponse, Response response) {
                 dismissProgressDialog();
-                adapter.updateFeeds(entryResponse.getResponseData().getFeed().getEntries());
+                ArrayList entries = entryResponse.getResponseData().getFeed().getEntries();
+                adapter.updateFeeds(entries);
+                headlessListener.saveEntry(entries);
             }
 
             @Override
@@ -105,5 +122,23 @@ public class EntryFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        try {
+            selectEntryListener = (EntriesInterface) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must Implement SelectItemInterface");
+        }
+
+        try {
+            headlessListener = (HeadlessFragment.HeadlessEntriesInterface) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must Implement HeadlessEntriesInterface");
+        }
+
+        super.onAttach(activity);
+
     }
 }

@@ -20,5 +20,6 @@
     <string name="loading_entries">Loading entries</string>
     <string name="title_activity_feed">Feed</string>
     <string name="hello_world">Hello world!</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

@@ -1,12 +1,9 @@
 package com.globant.fernandoraviola.fidreader.fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
-
-import com.globant.fernandoraviola.fidreader.activities.FragmentInteractionsInterface;
 
 /**
  * Created by fernando.raviola on 11/10/2014.
@@ -55,7 +52,6 @@ public class BaseFragment extends Fragment {
             mErrorDialog.dismiss();
         }
     }
-
 
 
     @Override

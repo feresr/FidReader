@@ -1,13 +1,12 @@
 package com.globant.fernandoraviola.fidreader.networking.response;
 
-import java.util.ArrayList;
-
 import com.globant.fernandoraviola.fidreader.models.Feed;
+
+import java.util.ArrayList;
 
 /**
  * Created by fernando.raviola on 11/4/2014.
  * Stores all attributes and methods related to a specific FeedResponseData.
- *
  */
 public class FeedResponseData {
     private String query;

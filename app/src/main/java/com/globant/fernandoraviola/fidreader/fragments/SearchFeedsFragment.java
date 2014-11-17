@@ -12,7 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.globant.fernandoraviola.fidreader.R;
-import com.globant.fernandoraviola.fidreader.activities.FragmentInteractionsInterface;
+import com.globant.fernandoraviola.fidreader.activities.SearchFeedsInterface;
 import com.globant.fernandoraviola.fidreader.adapters.FeedAdapter;
 import com.globant.fernandoraviola.fidreader.models.Feed;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedClient;
@@ -32,15 +32,14 @@ public class SearchFeedsFragment extends BaseFragment implements AbsListView.OnI
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String SECTION = "section";
+    /**
+     * Handles navigation-drawer related actions and other callbacks to the activity
+     */
+    protected SearchFeedsInterface fragmentInteractionsListener;
     private GoogleFeedInterface mFeedInterface = GoogleFeedClient.getGoogleFeedInterface();
     private int section;
     private Button searchBtn;
     private TextView searchTxt;
-
-    /**
-     * Handles navigation-drawer related actions and other callbacks to the activity
-     */
-    protected FragmentInteractionsInterface fragmentInteractionsListener;
     /**
      * The fragment's ListView/GridView.
      */
@@ -55,7 +54,8 @@ public class SearchFeedsFragment extends BaseFragment implements AbsListView.OnI
     /**
      * The listener used to save and load feeds upon state changes / rotation
      */
-    private HeadlessFragment.HeadlessInterface headlessListener;
+    private HeadlessFragment.HeadlessFeedsInterface headlessListener;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -122,18 +122,17 @@ public class SearchFeedsFragment extends BaseFragment implements AbsListView.OnI
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            fragmentInteractionsListener = (FragmentInteractionsInterface) activity;
+            fragmentInteractionsListener = (SearchFeedsInterface) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement FragmentInteractionsInterface");
         }
         fragmentInteractionsListener.onSectionAttached(section);
 
         try {
-            headlessListener = (HeadlessFragment.HeadlessInterface) activity;
+            headlessListener = (HeadlessFragment.HeadlessFeedsInterface) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement HeadlessInterface");
         }
-
 
 
     }

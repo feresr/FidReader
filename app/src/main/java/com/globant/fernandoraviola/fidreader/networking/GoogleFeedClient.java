@@ -1,6 +1,5 @@
 package com.globant.fernandoraviola.fidreader.networking;
 
-import android.content.Context;
 import retrofit.RestAdapter;
 
 /**

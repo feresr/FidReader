@@ -15,9 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.globant.fernandoraviola.fidreader.R;
-import com.globant.fernandoraviola.fidreader.fragments.SearchFeedsFragment;
 import com.globant.fernandoraviola.fidreader.fragments.HeadlessFragment;
 import com.globant.fernandoraviola.fidreader.fragments.NavigationDrawerFragment;
+import com.globant.fernandoraviola.fidreader.fragments.SearchFeedsFragment;
 import com.globant.fernandoraviola.fidreader.helpers.Navigator;
 import com.globant.fernandoraviola.fidreader.models.Feed;
 
@@ -27,7 +27,7 @@ import java.util.ArrayList;
  * Acts as the main entry point for the application.
  */
 public class MainActivity extends FragmentActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentInteractionsInterface, HeadlessFragment.HeadlessInterface {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, SearchFeedsInterface, HeadlessFragment.HeadlessFeedsInterface {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 

@@ -3,6 +3,7 @@ package com.globant.fernandoraviola.fidreader.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.globant.fernandoraviola.fidreader.models.Entry;
 import com.globant.fernandoraviola.fidreader.models.Feed;
 
 import java.util.ArrayList;
@@ -10,10 +11,12 @@ import java.util.ArrayList;
 /**
  * Created by fernando.raviola on 11/14/2014.
  */
-public class HeadlessFragment extends Fragment{
+public class HeadlessFragment extends Fragment {
 
-    private ArrayList<Feed> feeds;
     public static String TAG = "headless";
+    private ArrayList<Feed> feeds;
+    private ArrayList<Entry> entries;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -22,6 +25,7 @@ public class HeadlessFragment extends Fragment{
         setRetainInstance(true);
     }
 
+    /*Feeds*/
     public ArrayList<Feed> getFeeds() {
         return feeds;
     }
@@ -30,9 +34,25 @@ public class HeadlessFragment extends Fragment{
         this.feeds = feeds;
     }
 
-    public interface HeadlessInterface{
+    /*Entries*/
+    public ArrayList<Entry> getEntries() {
+        return entries;
+    }
+
+    public void setEntries(ArrayList<Entry> entries) {
+        this.entries = entries;
+    }
+
+
+    public interface HeadlessFeedsInterface {
         public void saveFeeds(ArrayList<Feed> feeds);
 
         public ArrayList<Feed> loadFeeds();
+    }
+
+    public interface HeadlessEntriesInterface {
+        public void saveEntry(ArrayList<Entry> entries);
+
+        public ArrayList<Entry> loadEntry();
     }
 }
