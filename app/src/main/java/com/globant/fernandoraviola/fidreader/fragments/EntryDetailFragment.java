@@ -22,10 +22,11 @@ public class EntryDetailFragment extends BaseFragment {
     private static final String ARG_DATE = "DATE";
     private static final String ARG_CONTENT = "CONTENT";
 
-    private String title;
-    private String author;
-    private String date;
-    private String content;
+    // These are initialized as empty strings for now
+    private String title = "";
+    private String author = "";
+    private String date = "";
+    private String content = "";
 
     private TextView titleTextView;
     private TextView authorTextView;
