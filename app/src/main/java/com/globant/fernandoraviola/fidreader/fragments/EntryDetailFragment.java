@@ -1,5 +1,6 @@
 package com.globant.fernandoraviola.fidreader.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Html;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.globant.fernandoraviola.fidreader.R;
+import com.globant.fernandoraviola.fidreader.models.Entry;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -86,5 +88,12 @@ public class EntryDetailFragment extends BaseFragment {
         contentTextView.setText(Html.fromHtml(content));
 
         return view;
+    }
+
+    public void displayEntry(Entry entry) {
+        titleTextView.setText(Html.fromHtml(entry.getTitle()));
+        authorTextView.setText(Html.fromHtml(entry.getAuthor()));
+        dateTextView.setText(Html.fromHtml(entry.getPublishedDate()));
+        contentTextView.setText(Html.fromHtml(entry.getContent()));
     }
 }

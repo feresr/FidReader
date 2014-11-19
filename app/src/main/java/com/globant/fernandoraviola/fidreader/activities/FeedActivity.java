@@ -36,18 +36,18 @@ public class FeedActivity extends FragmentActivity implements EntriesInterface, 
     /**
      * Indicates whether two pane view is enabled or not.
      */
-    Boolean isDualPane;
+    private Boolean isDualPane;
+
+
+    EntryDetailFragment entryDetailFragment;
+    EntryListFragment entryListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_feed);
 
         navigator = new Navigator(this);
-
-        View entryDetailView = findViewById(R.id.entry_details_frg);
-        isDualPane = entryDetailView != null &&
-                entryDetailView.getVisibility() == View.VISIBLE;
+        setContentView(R.layout.activity_feed);
 
         //Provides back navigation on the action bar
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -62,7 +62,14 @@ public class FeedActivity extends FragmentActivity implements EntriesInterface, 
                     HeadlessFragment.TAG).commit();
         }
 
-        if (!isDualPane) {
+        isDualPane = findViewById(R.id.container) == null;
+        if (isDualPane) {
+            entryDetailFragment = (EntryDetailFragment) getSupportFragmentManager().findFragmentById(
+                    R.id.entry_details_frg);
+            entryListFragment = (EntryListFragment) getSupportFragmentManager().findFragmentById(R.id.entry_list_frg);
+
+        } else {
+
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, EntryListFragment.newInstance(getIntent().getExtras().getString(FEED_URL_TAG)))
                     .commit();
@@ -93,14 +100,9 @@ public class FeedActivity extends FragmentActivity implements EntriesInterface, 
     @Override
     public void showEntryDetails(Entry entry) {
         if (isDualPane) {
-            // I know I should update the details fragment and not replace it with another one
-            // I will reformat this once it's working
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction t = fragmentManager.beginTransaction();
-            t.replace(R.id.entry_details_frg , EntryDetailFragment.newInstance(entry.getTitle(), entry.getAuthor(), entry.getPublishedDate(), entry.getContent()));
-
+            entryDetailFragment.displayEntry(entry);
         } else {
-            // If we're not in dual pane, we need to replace the current fragment "details fragment"
+            // If we're not in dual pane, we need to replace the current fragment with "details fragment"
             navigator.pushFragment(EntryDetailFragment.newInstance(entry.getTitle(), entry.getAuthor(), entry.getPublishedDate(), entry.getContent()), null, true);
         }
     }
@@ -110,7 +112,7 @@ public class FeedActivity extends FragmentActivity implements EntriesInterface, 
     }
 
     @Override
-    public ArrayList<Entry> loadEntry() {
+    public ArrayList<Entry> loadEntries() {
         return headlessFragment.getEntries();
     }
 }

@@ -53,6 +53,6 @@ public class HeadlessFragment extends Fragment {
     public interface HeadlessEntriesInterface {
         public void saveEntry(ArrayList<Entry> entries);
 
-        public ArrayList<Entry> loadEntry();
+        public ArrayList<Entry> loadEntries();
     }
 }

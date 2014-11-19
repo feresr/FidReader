@@ -3,7 +3,6 @@ package com.globant.fernandoraviola.fidreader.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +33,7 @@ public class EntryListFragment extends BaseFragment {
 
     private static final String FEED_URL = "url";
     private GoogleFeedInterface mFeedInterface;
-    private String feedUrl;
+    private String feedUrl = "http://googlepress.blogspot.com/feeds/posts/default";
     private EntryAdapter adapter;
     private ListView listView;
     private EntriesInterface selectEntryListener;
@@ -65,6 +64,7 @@ public class EntryListFragment extends BaseFragment {
 
     @Override
     public void onAttach(Activity activity) {
+        super.onAttach(activity);
         try {
             selectEntryListener = (EntriesInterface) activity;
         } catch (ClassCastException e) {
@@ -76,13 +76,12 @@ public class EntryListFragment extends BaseFragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must Implement HeadlessEntriesInterface");
         }
-        super.onAttach(activity);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFeedInterface = GoogleFeedClient.getGoogleFeedInterface();
+
         if (getArguments() != null) {
             feedUrl = getArguments().getString(FEED_URL);
         } else {
@@ -92,8 +91,7 @@ public class EntryListFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //get entries to populate list view
         View view = inflater.inflate(R.layout.fragment_entry, container, false);
         listView = (ListView) view.findViewById(android.R.id.list);
@@ -103,7 +101,7 @@ public class EntryListFragment extends BaseFragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         adapter = new EntryAdapter(getActivity(), R.layout.entry_item);
@@ -116,15 +114,19 @@ public class EntryListFragment extends BaseFragment {
             }
         });
 
-        if (headlessListener.loadEntry() != null) {
-            adapter.updateFeeds(headlessListener.loadEntry());
-        } else {
+        // If we have entries stored in the Headlessfragment?
+        if(headlessListener.loadEntries() != null){
+            // Get the entries from the headless fragment.
+            adapter.updateFeeds(headlessListener.loadEntries());
+        }else {
+            // Fetch entries from the web.
             loadFeed();
         }
     }
 
     private void loadFeed() {
         showProgressDialog(R.string.loading_entries);
+        mFeedInterface = GoogleFeedClient.getGoogleFeedInterface();
         mFeedInterface.loadFeed(feedUrl, new Callback<EntryResponse>() {
             @Override
             public void success(EntryResponse entryResponse, Response response) {
