@@ -36,7 +36,7 @@ public class FeedActivity extends FragmentActivity implements EntriesInterface, 
     /**
      * Indicates whether two pane view is enabled or not.
      */
-    private Boolean isDualPane;
+    private boolean isDualPane;
 
 
     EntryDetailFragment entryDetailFragment;
@@ -62,14 +62,18 @@ public class FeedActivity extends FragmentActivity implements EntriesInterface, 
                     HeadlessFragment.TAG).commit();
         }
 
+        entryDetailFragment = (EntryDetailFragment) getSupportFragmentManager().findFragmentById(
+                R.id.entry_details_frg);
+        entryListFragment = (EntryListFragment) getSupportFragmentManager().findFragmentById(R.id.entry_list_frg);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         isDualPane = findViewById(R.id.container) == null;
-        if (isDualPane) {
-            entryDetailFragment = (EntryDetailFragment) getSupportFragmentManager().findFragmentById(
-                    R.id.entry_details_frg);
-            entryListFragment = (EntryListFragment) getSupportFragmentManager().findFragmentById(R.id.entry_list_frg);
-
-        } else {
-
+        if (!isDualPane) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, EntryListFragment.newInstance(getIntent().getExtras().getString(FEED_URL_TAG)))
                     .commit();
