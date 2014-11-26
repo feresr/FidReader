@@ -14,6 +14,8 @@ import java.util.ArrayList;
 public class HeadlessFragment extends Fragment {
 
     public static String TAG = "headless";
+
+    public static String TAG2 = "headless2";
     private ArrayList<Feed> feeds;
     private ArrayList<Entry> entries;
 
@@ -21,6 +23,7 @@ public class HeadlessFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         //The heart and mind of headless fragment is below line. It will keep the fragment alive during configuration change when activities and   //subsequent fragments are "put to death" and recreated
         setRetainInstance(true);
     }

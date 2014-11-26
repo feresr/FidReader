@@ -23,11 +23,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.globant.fernandoraviola.fidreader.activities.FeedActivity"
-            android:label="@string/title_activity_feed"
-            android:parentActivityName="com.globant.fernandoraviola.fidreader.activities.MainActivity">
+        <activity android:name=".activities.FeedActivity"
+            android:parentActivityName=".activities.MainActivity"
+            android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity"/>
+        </activity>
+        <activity android:name="com.globant.fernandoraviola.fidreader.activities.DetailsActivity"
+            android:label="@string/title_activity_details"
+            android:parentActivityName="com.globant.fernandoraviola.fidreader.activities.FeedActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.globant.fernandoraviola.fidreader.activities.MainActivity" />
+                android:value="com.globant.fernandoraviola.fidreader.activities.FeedActivity" />
         </activity>
     </application>
 

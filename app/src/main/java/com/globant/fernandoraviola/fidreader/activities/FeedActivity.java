@@ -1,91 +1,49 @@
 package com.globant.fernandoraviola.fidreader.activities;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.globant.fernandoraviola.fidreader.R;
 import com.globant.fernandoraviola.fidreader.fragments.EntryDetailFragment;
 import com.globant.fernandoraviola.fidreader.fragments.EntryListFragment;
-import com.globant.fernandoraviola.fidreader.fragments.HeadlessFragment;
-import com.globant.fernandoraviola.fidreader.helpers.Navigator;
 import com.globant.fernandoraviola.fidreader.models.Entry;
 
-import java.util.ArrayList;
-
-public class FeedActivity extends FragmentActivity implements EntriesInterface, HeadlessFragment.HeadlessEntriesInterface {
+public class FeedActivity extends FragmentActivity implements EntryListFragment.EntryListCallbacksInterface {
 
     public static final String FEED_URL_TAG = "FEED_URL";
-
-    /**
-     * Used to navigate back and forth between fragments.
-     */
-    private Navigator navigator;
-
-    /**
-     * Headless fragment used to preserve states between rotations
-     */
-    private HeadlessFragment headlessFragment;
+    EntryDetailFragment entryDetailFragment;
+    EntryListFragment entryListFragment;
 
     /**
      * Indicates whether two pane view is enabled or not.
      */
     private boolean isDualPane;
 
-
-    EntryDetailFragment entryDetailFragment;
-    EntryListFragment entryListFragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        navigator = new Navigator(this);
         setContentView(R.layout.activity_feed);
+
+        isDualPane = findViewById(R.id.entry_details_frg) != null && findViewById(R.id.entry_details_frg).getVisibility() == View.VISIBLE;
+
+        entryDetailFragment = (EntryDetailFragment) getSupportFragmentManager().findFragmentById(R.id.entry_details_frg);
+        entryListFragment = (EntryListFragment) getSupportFragmentManager().findFragmentById(R.id.entry_list_frg);
+
+        if (savedInstanceState == null) {
+            //If it's the FIRST time we get into the activity, we will be passed in a string with the Feed Url
+            entryListFragment.setFeedUrl(getIntent().getExtras().getString(FEED_URL_TAG));
+        }
 
         //Provides back navigation on the action bar
         getActionBar().setDisplayHomeAsUpEnabled(true);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        headlessFragment = (HeadlessFragment) fragmentManager
-                .findFragmentByTag(HeadlessFragment.TAG);
-
-        if (headlessFragment == null) {
-            headlessFragment = new HeadlessFragment();
-            fragmentManager.beginTransaction().add(headlessFragment,
-                    HeadlessFragment.TAG).commit();
-        }
-
-        entryDetailFragment = (EntryDetailFragment) getSupportFragmentManager().findFragmentById(
-                R.id.entry_details_frg);
-        entryListFragment = (EntryListFragment) getSupportFragmentManager().findFragmentById(R.id.entry_list_frg);
-
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        isDualPane = findViewById(R.id.container) == null;
-        if (!isDualPane) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, EntryListFragment.newInstance(getIntent().getExtras().getString(FEED_URL_TAG)))
-                    .commit();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_feed, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -103,20 +61,19 @@ public class FeedActivity extends FragmentActivity implements EntriesInterface, 
 
     @Override
     public void showEntryDetails(Entry entry) {
+
         if (isDualPane) {
-            entryDetailFragment.displayEntry(entry);
+            entryDetailFragment.updateEntry(entry);
+            entryDetailFragment.refreshView();
         } else {
-            // If we're not in dual pane, we need to replace the current fragment with "details fragment"
-            navigator.pushFragment(EntryDetailFragment.newInstance(entry.getTitle(), entry.getAuthor(), entry.getPublishedDate(), entry.getContent()), null, true);
+            Intent i = new Intent(this, DetailsActivity.class);
+            i.putExtra(Entry.TAG, entry);
+            startActivity(i);
         }
-    }
-    @Override
-    public void saveEntry(ArrayList<Entry> entries) {
-        headlessFragment.setEntries(entries);
     }
 
     @Override
-    public ArrayList<Entry> loadEntries() {
-        return headlessFragment.getEntries();
+    public boolean isInDualPane() {
+        return isDualPane;
     }
 }

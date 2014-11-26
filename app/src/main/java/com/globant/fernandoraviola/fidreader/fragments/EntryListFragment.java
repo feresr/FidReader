@@ -1,7 +1,6 @@
 package com.globant.fernandoraviola.fidreader.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +9,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.globant.fernandoraviola.fidreader.R;
-import com.globant.fernandoraviola.fidreader.activities.EntriesInterface;
 import com.globant.fernandoraviola.fidreader.adapters.EntryAdapter;
+import com.globant.fernandoraviola.fidreader.models.Entry;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedClient;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedInterface;
 import com.globant.fernandoraviola.fidreader.networking.response.EntryResponse;
@@ -22,81 +21,34 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the FragmentInteractionInterface
- * to handle interaction events.
- * Use the {@link EntryListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class EntryListFragment extends BaseFragment {
 
-    private static final String FEED_URL = "url";
-    private GoogleFeedInterface mFeedInterface;
-    private String feedUrl = "http://googlepress.blogspot.com/feeds/posts/default";
+    public static final String KEY_ENTRIES = "ENTRIES";
+    public static final String KEY_SELECTED_ENTRY_INDEX = "ENTRY_INDEX";
+    private String feedUrl;
     private EntryAdapter adapter;
     private ListView listView;
-    private EntriesInterface selectEntryListener;
-
-    /**
-     * The listener used to save and load feeds upon state changes / rotation
-     */
-    private HeadlessFragment.HeadlessEntriesInterface headlessListener;
-
-    public EntryListFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param feedUrl feed url.
-     * @return A new instance of fragment EntryFragment.
-     */
-    public static EntryListFragment newInstance(String feedUrl) {
-        EntryListFragment fragment = new EntryListFragment();
-        Bundle args = new Bundle();
-        args.putString(FEED_URL, feedUrl);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private EntryListCallbacksInterface listCallbackListener;
+    private ArrayList<Entry> entries;
+    private int selectedEntryIndex = 0;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            selectEntryListener = (EntriesInterface) activity;
+            listCallbackListener = (EntryListCallbacksInterface) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must Implement SelectItemInterface");
-        }
-
-        try {
-            headlessListener = (HeadlessFragment.HeadlessEntriesInterface) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must Implement HeadlessEntriesInterface");
-        }
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            feedUrl = getArguments().getString(FEED_URL);
-        } else {
-            // Initialized with a default URL for testing purposes.
-            feedUrl = "http://googlepress.blogspot.com/feeds/posts/default";
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //get entries to populate list view
-        View view = inflater.inflate(R.layout.fragment_entry, container, false);
+        View view = inflater.inflate(R.layout.fragment_entry_list, container, false);
         listView = (ListView) view.findViewById(android.R.id.list);
         listView.setEmptyView(view.findViewById(android.R.id.empty));
-
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         return view;
     }
 
@@ -105,35 +57,48 @@ public class EntryListFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
 
         adapter = new EntryAdapter(getActivity(), R.layout.entry_item);
+
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectEntryListener.showEntryDetails(adapter.getItem(position));
+                selectedEntryIndex = position;
+                listCallbackListener.showEntryDetails(adapter.getItem(position));
             }
         });
 
-        // If we have entries stored in the Headlessfragment?
-        if(headlessListener.loadEntries() != null){
-            // Get the entries from the headless fragment.
-            adapter.updateFeeds(headlessListener.loadEntries());
-        }else {
-            // Fetch entries from the web.
-            loadFeed();
+        if (savedInstanceState != null) {
+            // Retrieve entries and update adapter
+            entries = savedInstanceState.getParcelableArrayList(KEY_ENTRIES);
+            adapter.updateFeeds(entries);
+
+            // Retrieve selected position
+            selectedEntryIndex = savedInstanceState.getInt(KEY_SELECTED_ENTRY_INDEX);
+
+            //If in dual pane mode, update details frag with the selected item.
+            if (listCallbackListener.isInDualPane()) {
+                listCallbackListener.showEntryDetails(adapter.getItem(selectedEntryIndex));
+            }
         }
+
+        //Update listview with the last selected entry, or 0 if none was selected yet.
+        listView.setItemChecked(selectedEntryIndex, true);
+
     }
 
     private void loadFeed() {
         showProgressDialog(R.string.loading_entries);
-        mFeedInterface = GoogleFeedClient.getGoogleFeedInterface();
+        GoogleFeedInterface mFeedInterface = GoogleFeedClient.getGoogleFeedInterface();
         mFeedInterface.loadFeed(feedUrl, new Callback<EntryResponse>() {
             @Override
             public void success(EntryResponse entryResponse, Response response) {
                 dismissProgressDialog();
-                ArrayList entries = entryResponse.getResponseData().getFeed().getEntries();
+                entries = entryResponse
+                        .getResponseData()
+                        .getFeed()
+                        .getEntries();
                 adapter.updateFeeds(entries);
-                headlessListener.saveEntry(entries);
             }
 
             @Override
@@ -153,4 +118,21 @@ public class EntryListFragment extends BaseFragment {
         });
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(KEY_ENTRIES, entries);
+        outState.putInt(KEY_SELECTED_ENTRY_INDEX, selectedEntryIndex);
+    }
+
+    public void setFeedUrl(String url) {
+        feedUrl = url;
+        loadFeed();
+    }
+
+    public interface EntryListCallbacksInterface {
+        public void showEntryDetails(Entry entry);
+
+        public boolean isInDualPane();
+    }
 }

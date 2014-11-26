@@ -2,8 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/container"
-    tools:context="com.globant.fernandoraviola.fidreader.activities.FeedActivity"
-    >
+    tools:context="com.globant.fernandoraviola.fidreader.activities.FeedActivity">
+
+    <fragment
+        android:id="@+id/entry_list_frg"
+        android:name="com.globant.fernandoraviola.fidreader.fragments.EntryListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_entry_list" />
 
 </FrameLayout>
