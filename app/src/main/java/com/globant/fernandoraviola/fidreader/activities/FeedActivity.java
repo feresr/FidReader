@@ -13,6 +13,12 @@ import com.globant.fernandoraviola.fidreader.fragments.EntryDetailFragment;
 import com.globant.fernandoraviola.fidreader.fragments.EntryListFragment;
 import com.globant.fernandoraviola.fidreader.models.Entry;
 
+/**
+ * This class shows a list of entries corresponding to a particular feed in both single and dual
+ * pane. It handles interactions between EntryListFragment and EntryDetailFragment displaying
+ * details about the selected entry on a fragment or in new Activity depending upon the current
+ * orientation of the device.
+ */
 public class FeedActivity extends FragmentActivity implements EntryListFragment.EntryListCallbacksInterface {
 
     public static final String FEED_URL_TAG = "FEED_URL";

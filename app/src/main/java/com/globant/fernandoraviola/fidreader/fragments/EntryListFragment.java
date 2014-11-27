@@ -21,6 +21,11 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+
+/**
+ * Shows a list of entry titles to select from and diverts callbacks to its parent activity for
+ * proper displaying of their details.
+ */
 public class EntryListFragment extends BaseFragment {
 
     public static final String KEY_ENTRIES = "ENTRIES";

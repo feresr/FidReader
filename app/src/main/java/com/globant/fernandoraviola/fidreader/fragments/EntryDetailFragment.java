@@ -10,6 +10,10 @@ import android.widget.TextView;
 import com.globant.fernandoraviola.fidreader.R;
 import com.globant.fernandoraviola.fidreader.models.Entry;
 
+/**
+ * This fragment displays details about about a particular entry.
+ * The #updateEntry() method is used to set the entry to display.
+ */
 public class EntryDetailFragment extends BaseFragment {
 
     private TextView titleTextView;

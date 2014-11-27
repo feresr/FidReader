@@ -32,6 +32,7 @@ public class SearchFeedsFragment extends BaseFragment implements AbsListView.OnI
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String SECTION = "section";
+    private static final String KEY_FEEDS = "KEY_FEEDS";
     /**
      * Handles navigation-drawer related actions and other callbacks to the activity
      */
@@ -40,6 +41,7 @@ public class SearchFeedsFragment extends BaseFragment implements AbsListView.OnI
     private int section;
     private Button searchBtn;
     private TextView searchTxt;
+    private ArrayList<Feed> feeds;
     /**
      * The fragment's ListView/GridView.
      */
@@ -50,11 +52,6 @@ public class SearchFeedsFragment extends BaseFragment implements AbsListView.OnI
      * Views.
      */
     private FeedAdapter mAdapter;
-
-    /**
-     * The listener used to save and load feeds upon state changes / rotation
-     */
-    private HeadlessFragment.HeadlessFeedsInterface headlessListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -111,8 +108,9 @@ public class SearchFeedsFragment extends BaseFragment implements AbsListView.OnI
             }
         });
 
-        if (headlessListener.loadFeeds() != null) {
-            mAdapter.updateFeeds(headlessListener.loadFeeds());
+        if (savedInstanceState != null) {
+            feeds = savedInstanceState.getParcelableArrayList(KEY_FEEDS);
+            mAdapter.updateFeeds(feeds);
         }
 
         return view;
@@ -127,14 +125,6 @@ public class SearchFeedsFragment extends BaseFragment implements AbsListView.OnI
             throw new ClassCastException(activity.toString() + " must implement FragmentInteractionsInterface");
         }
         fragmentInteractionsListener.onSectionAttached(section);
-
-        try {
-            headlessListener = (HeadlessFragment.HeadlessFeedsInterface) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement HeadlessInterface");
-        }
-
-
     }
 
     @Override
@@ -149,9 +139,8 @@ public class SearchFeedsFragment extends BaseFragment implements AbsListView.OnI
         mFeedInterface.getFeeds(keyword, new Callback<FeedResponse>() {
             @Override
             public void success(FeedResponse feedResponse, Response response) {
-                ArrayList<Feed> feeds = feedResponse.getResponseData().getEntries();
+                feeds = feedResponse.getResponseData().getEntries();
                 mAdapter.updateFeeds(feeds);
-                headlessListener.saveFeeds(feeds);
                 dismissProgressDialog();
             }
 
@@ -177,5 +166,11 @@ public class SearchFeedsFragment extends BaseFragment implements AbsListView.OnI
     public void onDetach() {
         super.onDetach();
         fragmentInteractionsListener = null;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(KEY_FEEDS, feeds);
     }
 }

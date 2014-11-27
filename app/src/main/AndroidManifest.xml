@@ -30,11 +30,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity"/>
         </activity>
-        <activity android:name="com.globant.fernandoraviola.fidreader.activities.DetailsActivity"
+        <activity android:name=".activities.DetailsActivity"
             android:label="@string/title_activity_details"
-            android:parentActivityName="com.globant.fernandoraviola.fidreader.activities.FeedActivity">
+            android:parentActivityName=".activities.FeedActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.globant.fernandoraviola.fidreader.activities.FeedActivity" />
+                android:value=".activities.FeedActivity" />
         </activity>
     </application>
 
