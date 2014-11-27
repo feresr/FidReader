@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    tools:context="com.globant.fernandoraviola.fidreader.activities.FeedActivity">
+
+    <fragment
+        android:id="@+id/entry_list_frg"
+        android:name="com.globant.fernandoraviola.fidreader.fragments.EntryListFragment"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        tools:layout="@layout/fragment_entry_list" />
+
+    <fragment
+        android:id="@+id/entry_details_frg"
+        android:name="com.globant.fernandoraviola.fidreader.fragments.EntryDetailFragment"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        tools:layout="@layout/fragment_entry_detail" />
+
+</LinearLayout>

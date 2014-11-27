@@ -6,7 +6,7 @@ package com.globant.fernandoraviola.fidreader.activities;
  * <p/>
  * This interface handles fragment-activity communication
  */
-public interface FragmentInteractionsInterface {
+public interface SearchFeedsInterface {
 
     void showFeedEntries(String feedUrl);
 

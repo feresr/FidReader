@@ -35,7 +35,7 @@ public class Navigator {
             transaction.addToBackStack(tag);
         }
 
-        transaction.replace(R.id.container, fragment);
+        transaction.replace(R.id.container, fragment, tag);
         return transaction.commit();
     }
 }

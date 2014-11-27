@@ -1,5 +1,8 @@
 package com.globant.fernandoraviola.fidreader.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
 /**
@@ -7,7 +10,7 @@ import java.util.ArrayList;
  * <p/>
  * Stores all attributes and methods related to a specific Feed.
  */
-public class Feed {
+public class Feed implements Parcelable {
 
     private String url;
     private String title;
@@ -55,4 +58,51 @@ public class Feed {
     public String getDescription() {
         return description;
     }
+
+    protected Feed(Parcel in) {
+        url = in.readString();
+        title = in.readString();
+        contentSnippet = in.readString();
+        link = in.readString();
+        description = in.readString();
+        if (in.readByte() == 0x01) {
+            entries = new ArrayList<Entry>();
+            in.readList(entries, Entry.class.getClassLoader());
+        } else {
+            entries = null;
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(url);
+        dest.writeString(title);
+        dest.writeString(contentSnippet);
+        dest.writeString(link);
+        dest.writeString(description);
+        if (entries == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(entries);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Feed> CREATOR = new Parcelable.Creator<Feed>() {
+        @Override
+        public Feed createFromParcel(Parcel in) {
+            return new Feed(in);
+        }
+
+        @Override
+        public Feed[] newArray(int size) {
+            return new Feed[size];
+        }
+    };
 }

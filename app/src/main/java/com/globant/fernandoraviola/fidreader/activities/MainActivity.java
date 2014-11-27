@@ -2,6 +2,7 @@ package com.globant.fernandoraviola.fidreader.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -13,16 +14,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.globant.fernandoraviola.fidreader.R;
-import com.globant.fernandoraviola.fidreader.fragments.EntryFragment;
-import com.globant.fernandoraviola.fidreader.fragments.FeedFragment;
 import com.globant.fernandoraviola.fidreader.fragments.NavigationDrawerFragment;
+import com.globant.fernandoraviola.fidreader.fragments.SearchFeedsFragment;
 import com.globant.fernandoraviola.fidreader.helpers.Navigator;
 
 /**
  * Acts as the main entry point for the application.
  */
 public class MainActivity extends FragmentActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FragmentInteractionsInterface {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, SearchFeedsInterface {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -41,6 +41,7 @@ public class MainActivity extends FragmentActivity
      */
     private Navigator navigator;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +57,6 @@ public class MainActivity extends FragmentActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-
     }
 
     @Override
@@ -64,7 +64,7 @@ public class MainActivity extends FragmentActivity
         // Update the main content by replacing fragments
         switch (position) {
             case 0:
-                navigator.pushFragment(FeedFragment.newInstance(position), null, false);
+                navigator.pushFragment(SearchFeedsFragment.newInstance(position), null, false);
                 break;
             default:
                 navigator.pushFragment(PlaceholderFragment.newInstance(position), null, false);
@@ -121,8 +121,11 @@ public class MainActivity extends FragmentActivity
 
     @Override
     public void showFeedEntries(String feedUrl) {
-        navigator.pushFragment(EntryFragment.newInstance(feedUrl), null, true);
+        Intent i = new Intent(this, FeedActivity.class);
+        i.putExtra(FeedActivity.FEED_URL_TAG, feedUrl);
+        startActivity(i);
     }
+
 
     /**
      * A placeholder fragment containing a simple view.
@@ -152,7 +155,7 @@ public class MainActivity extends FragmentActivity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_placeholder, container, false);
             return rootView;
         }
 

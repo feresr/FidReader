@@ -71,10 +71,18 @@ public class NavigationDrawerFragment extends Fragment {
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
+        } else {
+            // Select either the default item (0) or the last selected item.
+            if (mDrawerListView != null) {
+                mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+            }
+            if (mDrawerLayout != null) {
+                mDrawerLayout.closeDrawer(mFragmentContainerView);
+            }
+            if (mCallbacks != null) {
+                mCallbacks.onNavigationDrawerItemSelected(mCurrentSelectedPosition);
+            }
         }
-
-        // Select either the default item (0) or the last selected item.
-        selectItem(mCurrentSelectedPosition);
     }
 
     @Override
@@ -187,14 +195,18 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void selectItem(int position) {
+        //If the user select the position the drawer is already in. We do not replace the fragment
+        //and use the one already attached instead.
+        boolean samePosition = mCurrentSelectedPosition == position;
         mCurrentSelectedPosition = position;
+
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
         }
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
-        if (mCallbacks != null) {
+        if (mCallbacks != null && !samePosition) {
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
     }

@@ -12,10 +12,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.globant.fernandoraviola.fidreader.R;
+import com.globant.fernandoraviola.fidreader.activities.SearchFeedsInterface;
 import com.globant.fernandoraviola.fidreader.adapters.FeedAdapter;
+import com.globant.fernandoraviola.fidreader.models.Feed;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedClient;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedInterface;
 import com.globant.fernandoraviola.fidreader.networking.response.FeedResponse;
+
+import java.util.ArrayList;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -24,15 +28,20 @@ import retrofit.client.Response;
 /**
  * A fragment representing a list of Feeds.
  */
-public class FeedFragment extends BaseFragment implements AbsListView.OnItemClickListener {
+public class SearchFeedsFragment extends BaseFragment implements AbsListView.OnItemClickListener {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String SECTION = "section";
+    private static final String KEY_FEEDS = "KEY_FEEDS";
+    /**
+     * Handles navigation-drawer related actions and other callbacks to the activity
+     */
+    protected SearchFeedsInterface fragmentInteractionsListener;
     private GoogleFeedInterface mFeedInterface = GoogleFeedClient.getGoogleFeedInterface();
     private int section;
     private Button searchBtn;
     private TextView searchTxt;
-
+    private ArrayList<Feed> feeds;
     /**
      * The fragment's ListView/GridView.
      */
@@ -48,11 +57,11 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public FeedFragment() {
+    public SearchFeedsFragment() {
     }
 
-    public static FeedFragment newInstance(int section) {
-        FeedFragment fragment = new FeedFragment();
+    public static SearchFeedsFragment newInstance(int section) {
+        SearchFeedsFragment fragment = new SearchFeedsFragment();
         Bundle args = new Bundle();
         args.putInt(SECTION, section);
         fragment.setArguments(args);
@@ -74,7 +83,7 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_feed, container, false);
+        View view = inflater.inflate(R.layout.fragment_search_feeds, container, false);
 
         // Set the adapter
         mListView = (ListView) view.findViewById(android.R.id.list);
@@ -99,12 +108,22 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
             }
         });
 
+        if (savedInstanceState != null) {
+            feeds = savedInstanceState.getParcelableArrayList(KEY_FEEDS);
+            mAdapter.updateFeeds(feeds);
+        }
+
         return view;
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        try {
+            fragmentInteractionsListener = (SearchFeedsInterface) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement FragmentInteractionsInterface");
+        }
         fragmentInteractionsListener.onSectionAttached(section);
     }
 
@@ -120,7 +139,8 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
         mFeedInterface.getFeeds(keyword, new Callback<FeedResponse>() {
             @Override
             public void success(FeedResponse feedResponse, Response response) {
-                mAdapter.updateFeeds(feedResponse.getResponseData().getEntries());
+                feeds = feedResponse.getResponseData().getEntries();
+                mAdapter.updateFeeds(feeds);
                 dismissProgressDialog();
             }
 
@@ -142,4 +162,15 @@ public class FeedFragment extends BaseFragment implements AbsListView.OnItemClic
         });
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        fragmentInteractionsListener = null;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(KEY_FEEDS, feeds);
+    }
 }

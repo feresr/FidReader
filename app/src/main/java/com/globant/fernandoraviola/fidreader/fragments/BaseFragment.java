@@ -1,12 +1,9 @@
 package com.globant.fernandoraviola.fidreader.fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
-
-import com.globant.fernandoraviola.fidreader.activities.FragmentInteractionsInterface;
 
 /**
  * Created by fernando.raviola on 11/10/2014.
@@ -18,7 +15,7 @@ public class BaseFragment extends Fragment {
 
     protected ProgressDialog mProgressDialog;
     protected AlertDialog mErrorDialog;
-    protected FragmentInteractionsInterface fragmentInteractionsListener;
+
 
     protected void showProgressDialog(int message) {
         if (getActivity() != null) {
@@ -56,21 +53,6 @@ public class BaseFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            fragmentInteractionsListener = (FragmentInteractionsInterface) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement FragmentInteractionsInterface");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        fragmentInteractionsListener = null;
-    }
 
     @Override
     public void onPause() {

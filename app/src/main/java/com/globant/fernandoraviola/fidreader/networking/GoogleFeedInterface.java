@@ -2,6 +2,7 @@ package com.globant.fernandoraviola.fidreader.networking;
 
 import com.globant.fernandoraviola.fidreader.networking.response.EntryResponse;
 import com.globant.fernandoraviola.fidreader.networking.response.FeedResponse;
+
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Query;
@@ -21,12 +22,12 @@ public interface GoogleFeedInterface {
      * Get a list of feeds to subscribe to.
      */
     @GET(URL_FIND_FEEDS)
-    public void getFeeds(@Query("q") String keyword,Callback<FeedResponse> callback);
+    public void getFeeds(@Query("q") String keyword, Callback<FeedResponse> callback);
 
     /**
      * Get entries specific to a feed.
      */
     @GET(URL_LOAD_FEEDS)
-    public void loadFeed(@Query("q") String feedUrl,Callback<EntryResponse> callback);
+    public void loadFeed(@Query("q") String feedUrl, Callback<EntryResponse> callback);
 
 }
