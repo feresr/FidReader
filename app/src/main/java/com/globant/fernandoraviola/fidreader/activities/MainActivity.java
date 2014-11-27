@@ -1,10 +1,9 @@
 package com.globant.fernandoraviola.fidreader.activities;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
@@ -60,7 +59,7 @@ public class MainActivity extends FragmentActivity
         // Update the main content by replacing fragments
         switch (position) {
             case 0:
-                navigator.pushFragment(SearchFeedsFragment.newInstance(position), null, false);
+                navigator.pushFragment(new SearchFeedsFragment(), null, false);
                 break;
             default:
                 navigator.pushFragment(PlaceholderFragment.newInstance(position), null, false);
@@ -126,16 +125,18 @@ public class MainActivity extends FragmentActivity
         }
 
         @Override
+        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+            if (savedInstanceState == null) {
+                title = "Placeholder fragment";
+            }
+            super.onActivityCreated(savedInstanceState);
+        }
+
+        @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_placeholder, container, false);
             return rootView;
-        }
-
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            setTitle("Placeholder Fragment");
         }
     }
 }

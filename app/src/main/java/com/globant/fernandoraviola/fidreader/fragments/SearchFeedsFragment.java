@@ -2,6 +2,7 @@ package com.globant.fernandoraviola.fidreader.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,6 @@ public class SearchFeedsFragment extends BaseFragment implements ListView.OnItem
      */
     protected SearchFeedsInterface fragmentInteractionsListener;
     private GoogleFeedInterface mFeedInterface = GoogleFeedClient.getGoogleFeedInterface();
-    private int section;
     private Button searchBtn;
     private TextView searchTxt;
     private ArrayList<Feed> feeds;
@@ -52,33 +52,20 @@ public class SearchFeedsFragment extends BaseFragment implements ListView.OnItem
      */
     private FeedAdapter mAdapter;
 
-    private String title = "Search feeds";
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public SearchFeedsFragment() {
-    }
-
-    public static SearchFeedsFragment newInstance(int section) {
-        SearchFeedsFragment fragment = new SearchFeedsFragment();
-        Bundle args = new Bundle();
-        args.putInt(SECTION, section);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            section = getArguments().getInt(SECTION);
-        }
-
         mAdapter = new FeedAdapter(getActivity(),
                 android.R.layout.simple_list_item_2);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            title = getResources().getString(R.string.search_feeds_title);
+        }
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -127,8 +114,6 @@ public class SearchFeedsFragment extends BaseFragment implements ListView.OnItem
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement FragmentInteractionsInterface");
         }
-
-        setTitle(title);
     }
 
     @Override

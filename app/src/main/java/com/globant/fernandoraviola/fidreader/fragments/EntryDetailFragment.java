@@ -46,6 +46,5 @@ public class EntryDetailFragment extends BaseFragment {
 
     public void updateEntry(Entry entry) {
         this.entry = entry;
-        setTitle(entry.getTitle());
     }
 }
