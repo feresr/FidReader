@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.globant.fernandoraviola.fidreader.R;
+import com.globant.fernandoraviola.fidreader.fragments.BaseFragment;
 import com.globant.fernandoraviola.fidreader.fragments.NavigationDrawerFragment;
 import com.globant.fernandoraviola.fidreader.fragments.SearchFeedsFragment;
 import com.globant.fernandoraviola.fidreader.helpers.Navigator;
@@ -31,10 +32,6 @@ public class MainActivity extends FragmentActivity
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
-    private CharSequence mTitle;
 
     /**
      * Used to navigate back and forth between fragments.
@@ -51,7 +48,6 @@ public class MainActivity extends FragmentActivity
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
@@ -71,28 +67,6 @@ public class MainActivity extends FragmentActivity
         }
     }
 
-    public void onSectionAttached(int number) {
-
-        switch (number) {
-            case 0:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 1:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section3);
-                break;
-        }
-    }
-
-    public void restoreActionBar() {
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle(mTitle);
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -101,7 +75,6 @@ public class MainActivity extends FragmentActivity
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.main, menu);
-            restoreActionBar();
             return true;
         }
         return super.onCreateOptionsMenu(menu);
@@ -130,7 +103,7 @@ public class MainActivity extends FragmentActivity
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class PlaceholderFragment extends BaseFragment {
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -162,8 +135,7 @@ public class MainActivity extends FragmentActivity
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
-            ((MainActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
+            setTitle("Placeholder Fragment");
         }
     }
 }

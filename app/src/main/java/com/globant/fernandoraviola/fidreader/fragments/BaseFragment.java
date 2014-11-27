@@ -1,5 +1,6 @@
 package com.globant.fernandoraviola.fidreader.fragments;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -15,7 +16,6 @@ public class BaseFragment extends Fragment {
 
     protected ProgressDialog mProgressDialog;
     protected AlertDialog mErrorDialog;
-
 
     protected void showProgressDialog(int message) {
         if (getActivity() != null) {
@@ -50,6 +50,14 @@ public class BaseFragment extends Fragment {
     protected void dismissErrorDialog() {
         if (mErrorDialog != null && mErrorDialog.isShowing()) {
             mErrorDialog.dismiss();
+        }
+    }
+
+    protected void setTitle(String title) {
+        ActionBar actionBar = getActivity().getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(title);
         }
     }
 

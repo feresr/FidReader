@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -28,7 +27,7 @@ import retrofit.client.Response;
 /**
  * A fragment representing a list of Feeds.
  */
-public class SearchFeedsFragment extends BaseFragment implements AbsListView.OnItemClickListener {
+public class SearchFeedsFragment extends BaseFragment implements ListView.OnItemClickListener {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String SECTION = "section";
@@ -52,6 +51,8 @@ public class SearchFeedsFragment extends BaseFragment implements AbsListView.OnI
      * Views.
      */
     private FeedAdapter mAdapter;
+
+    private String title = "Search feeds";
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -110,7 +111,9 @@ public class SearchFeedsFragment extends BaseFragment implements AbsListView.OnI
 
         if (savedInstanceState != null) {
             feeds = savedInstanceState.getParcelableArrayList(KEY_FEEDS);
-            mAdapter.updateFeeds(feeds);
+            if (feeds != null) {
+                mAdapter.updateFeeds(feeds);
+            }
         }
 
         return view;
@@ -124,7 +127,8 @@ public class SearchFeedsFragment extends BaseFragment implements AbsListView.OnI
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement FragmentInteractionsInterface");
         }
-        fragmentInteractionsListener.onSectionAttached(section);
+
+        setTitle(title);
     }
 
     @Override

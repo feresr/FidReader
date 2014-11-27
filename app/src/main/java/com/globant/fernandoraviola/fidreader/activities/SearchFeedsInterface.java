@@ -10,5 +10,4 @@ public interface SearchFeedsInterface {
 
     void showFeedEntries(String feedUrl);
 
-    void onSectionAttached(int section);
 }
