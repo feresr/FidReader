@@ -44,6 +44,11 @@ public class FeedActivity extends FragmentActivity implements EntryListFragment.
         getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        entryListFragment.showPreviouslySelectedEntry();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -70,10 +75,5 @@ public class FeedActivity extends FragmentActivity implements EntryListFragment.
             i.putExtra(Entry.TAG, entry);
             startActivity(i);
         }
-    }
-
-    @Override
-    public boolean isInDualPane() {
-        return isDualPane;
     }
 }

@@ -76,10 +76,6 @@ public class EntryListFragment extends BaseFragment {
             // Retrieve selected position
             selectedEntryIndex = savedInstanceState.getInt(KEY_SELECTED_ENTRY_INDEX);
 
-            //If in dual pane mode, update details frag with the selected item.
-            if (listCallbackListener.isInDualPane()) {
-                listCallbackListener.showEntryDetails(adapter.getItem(selectedEntryIndex));
-            }
         }
 
         //Update listview with the last selected entry, or 0 if none was selected yet.
@@ -99,6 +95,7 @@ public class EntryListFragment extends BaseFragment {
                         .getFeed()
                         .getEntries();
                 adapter.updateFeeds(entries);
+                showPreviouslySelectedEntry();
             }
 
             @Override
@@ -132,7 +129,12 @@ public class EntryListFragment extends BaseFragment {
 
     public interface EntryListCallbacksInterface {
         public void showEntryDetails(Entry entry);
+    }
 
-        public boolean isInDualPane();
+    public void showPreviouslySelectedEntry() {
+        if(adapter.getCount() > 0 && getActivity().findViewById(R.id.entry_details_frg) != null &&
+                getActivity().findViewById(R.id.entry_details_frg).getVisibility() == View.VISIBLE) {
+            listCallbackListener.showEntryDetails(adapter.getItem(selectedEntryIndex));
+        }
     }
 }
