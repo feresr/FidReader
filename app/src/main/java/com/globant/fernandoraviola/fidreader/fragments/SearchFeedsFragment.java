@@ -2,10 +2,10 @@ package com.globant.fernandoraviola.fidreader.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -28,7 +28,7 @@ import retrofit.client.Response;
 /**
  * A fragment representing a list of Feeds.
  */
-public class SearchFeedsFragment extends BaseFragment implements AbsListView.OnItemClickListener {
+public class SearchFeedsFragment extends BaseFragment implements ListView.OnItemClickListener {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String SECTION = "section";
@@ -38,7 +38,6 @@ public class SearchFeedsFragment extends BaseFragment implements AbsListView.OnI
      */
     protected SearchFeedsInterface fragmentInteractionsListener;
     private GoogleFeedInterface mFeedInterface = GoogleFeedClient.getGoogleFeedInterface();
-    private int section;
     private Button searchBtn;
     private TextView searchTxt;
     private ArrayList<Feed> feeds;
@@ -53,31 +52,20 @@ public class SearchFeedsFragment extends BaseFragment implements AbsListView.OnI
      */
     private FeedAdapter mAdapter;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public SearchFeedsFragment() {
-    }
-
-    public static SearchFeedsFragment newInstance(int section) {
-        SearchFeedsFragment fragment = new SearchFeedsFragment();
-        Bundle args = new Bundle();
-        args.putInt(SECTION, section);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            section = getArguments().getInt(SECTION);
-        }
-
         mAdapter = new FeedAdapter(getActivity(),
                 android.R.layout.simple_list_item_2);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            title = getResources().getString(R.string.search_feeds_title);
+        }
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -110,7 +98,9 @@ public class SearchFeedsFragment extends BaseFragment implements AbsListView.OnI
 
         if (savedInstanceState != null) {
             feeds = savedInstanceState.getParcelableArrayList(KEY_FEEDS);
-            mAdapter.updateFeeds(feeds);
+            if (feeds != null) {
+                mAdapter.updateFeeds(feeds);
+            }
         }
 
         return view;
@@ -124,12 +114,11 @@ public class SearchFeedsFragment extends BaseFragment implements AbsListView.OnI
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement FragmentInteractionsInterface");
         }
-        fragmentInteractionsListener.onSectionAttached(section);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        fragmentInteractionsListener.showFeedEntries(mAdapter.getItem(position).getUrl());
+        fragmentInteractionsListener.showFeedEntries(mAdapter.getItem(position));
     }
 
     private void fetchFeeds(String keyword) {

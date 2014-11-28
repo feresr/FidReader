@@ -1,6 +1,8 @@
 package com.globant.fernandoraviola.fidreader.activities;
 
 
+import com.globant.fernandoraviola.fidreader.models.Feed;
+
 /**
  * Created by fernando.raviola on 11/12/2014.
  * <p/>
@@ -8,7 +10,6 @@ package com.globant.fernandoraviola.fidreader.activities;
  */
 public interface SearchFeedsInterface {
 
-    void showFeedEntries(String feedUrl);
+    void showFeedEntries(Feed feed);
 
-    void onSectionAttached(int section);
 }

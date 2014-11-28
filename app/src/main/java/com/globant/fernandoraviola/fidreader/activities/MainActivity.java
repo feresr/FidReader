@@ -1,10 +1,9 @@
 package com.globant.fernandoraviola.fidreader.activities;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
@@ -14,9 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.globant.fernandoraviola.fidreader.R;
+import com.globant.fernandoraviola.fidreader.fragments.BaseFragment;
 import com.globant.fernandoraviola.fidreader.fragments.NavigationDrawerFragment;
 import com.globant.fernandoraviola.fidreader.fragments.SearchFeedsFragment;
 import com.globant.fernandoraviola.fidreader.helpers.Navigator;
+import com.globant.fernandoraviola.fidreader.models.Feed;
 
 /**
  * Acts as the main entry point for the application.
@@ -31,10 +32,6 @@ public class MainActivity extends FragmentActivity
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
-    private CharSequence mTitle;
 
     /**
      * Used to navigate back and forth between fragments.
@@ -51,7 +48,6 @@ public class MainActivity extends FragmentActivity
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
@@ -64,35 +60,13 @@ public class MainActivity extends FragmentActivity
         // Update the main content by replacing fragments
         switch (position) {
             case 0:
-                navigator.pushFragment(SearchFeedsFragment.newInstance(position), null, false);
+                navigator.pushFragment(new SearchFeedsFragment(), null, false);
                 break;
             default:
                 navigator.pushFragment(PlaceholderFragment.newInstance(position), null, false);
         }
     }
 
-    public void onSectionAttached(int number) {
-
-        switch (number) {
-            case 0:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 1:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section3);
-                break;
-        }
-    }
-
-    public void restoreActionBar() {
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle(mTitle);
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -101,7 +75,6 @@ public class MainActivity extends FragmentActivity
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.main, menu);
-            restoreActionBar();
             return true;
         }
         return super.onCreateOptionsMenu(menu);
@@ -120,9 +93,10 @@ public class MainActivity extends FragmentActivity
     }
 
     @Override
-    public void showFeedEntries(String feedUrl) {
+    public void showFeedEntries(Feed feed) {
         Intent i = new Intent(this, FeedActivity.class);
-        i.putExtra(FeedActivity.FEED_URL_TAG, feedUrl);
+        i.putExtra(FeedActivity.FEED_URL_TAG, feed.getUrl());
+        i.putExtra(FeedActivity.FEED_TITLE_TAG, feed.getTitle());
         startActivity(i);
     }
 
@@ -130,7 +104,7 @@ public class MainActivity extends FragmentActivity
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class PlaceholderFragment extends BaseFragment {
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -153,17 +127,18 @@ public class MainActivity extends FragmentActivity
         }
 
         @Override
+        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+            if (savedInstanceState == null) {
+                title = "Placeholder fragment";
+            }
+            super.onActivityCreated(savedInstanceState);
+        }
+
+        @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_placeholder, container, false);
             return rootView;
-        }
-
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((MainActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
 }

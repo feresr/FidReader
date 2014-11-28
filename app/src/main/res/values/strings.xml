@@ -28,5 +28,6 @@
     <string name="entry_detail_fragment">entry_detail_fragment</string>
     <string name="entry_list_fragment">entry_list_fragment</string>
     <string name="title_activity_details">Detail</string>
+    <string name="search_feeds_title">Search feeds</string>
 
 </resources>
