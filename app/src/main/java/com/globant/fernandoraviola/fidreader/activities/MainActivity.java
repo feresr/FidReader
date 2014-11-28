@@ -17,6 +17,7 @@ import com.globant.fernandoraviola.fidreader.fragments.BaseFragment;
 import com.globant.fernandoraviola.fidreader.fragments.NavigationDrawerFragment;
 import com.globant.fernandoraviola.fidreader.fragments.SearchFeedsFragment;
 import com.globant.fernandoraviola.fidreader.helpers.Navigator;
+import com.globant.fernandoraviola.fidreader.models.Feed;
 
 /**
  * Acts as the main entry point for the application.
@@ -92,9 +93,10 @@ public class MainActivity extends FragmentActivity
     }
 
     @Override
-    public void showFeedEntries(String feedUrl) {
+    public void showFeedEntries(Feed feed) {
         Intent i = new Intent(this, FeedActivity.class);
-        i.putExtra(FeedActivity.FEED_URL_TAG, feedUrl);
+        i.putExtra(FeedActivity.FEED_URL_TAG, feed.getUrl());
+        i.putExtra(FeedActivity.FEED_TITLE_TAG, feed.getTitle());
         startActivity(i);
     }
 

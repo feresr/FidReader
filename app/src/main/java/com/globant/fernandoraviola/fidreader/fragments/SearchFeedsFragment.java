@@ -118,7 +118,7 @@ public class SearchFeedsFragment extends BaseFragment implements ListView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        fragmentInteractionsListener.showFeedEntries(mAdapter.getItem(position).getUrl());
+        fragmentInteractionsListener.showFeedEntries(mAdapter.getItem(position));
     }
 
     private void fetchFeeds(String keyword) {

@@ -1,10 +1,12 @@
 package com.globant.fernandoraviola.fidreader.activities;
 
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
+import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -22,8 +24,10 @@ import com.globant.fernandoraviola.fidreader.models.Entry;
 public class FeedActivity extends FragmentActivity implements EntryListFragment.EntryListCallbacksInterface {
 
     public static final String FEED_URL_TAG = "FEED_URL";
+    public static final String FEED_TITLE_TAG = "FEED_TITLE";
     EntryDetailFragment entryDetailFragment;
     EntryListFragment entryListFragment;
+    private String title;
 
     /**
      * Indicates whether two pane view is enabled or not.
@@ -44,6 +48,17 @@ public class FeedActivity extends FragmentActivity implements EntryListFragment.
         if (savedInstanceState == null) {
             //If it's the FIRST time we get into the activity, we will be passed in a string with the Feed Url
             entryListFragment.setFeedUrl(getIntent().getExtras().getString(FEED_URL_TAG));
+
+            title = getIntent().getExtras().getString(FEED_TITLE_TAG);
+
+        } else {
+            title = savedInstanceState.getString(FEED_TITLE_TAG);
+        }
+
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null && title != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(Html.fromHtml(title));
         }
 
         //Provides back navigation on the action bar
@@ -81,5 +96,11 @@ public class FeedActivity extends FragmentActivity implements EntryListFragment.
             i.putExtra(Entry.TAG, entry);
             startActivity(i);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(FEED_TITLE_TAG, title);
     }
 }
