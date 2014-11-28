@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.globant.fernandoraviola.fidreader.R;
 import com.globant.fernandoraviola.fidreader.adapters.EntryAdapter;
@@ -14,6 +15,9 @@ import com.globant.fernandoraviola.fidreader.models.Entry;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedClient;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedInterface;
 import com.globant.fernandoraviola.fidreader.networking.response.EntryResponse;
+
+import org.apache.http.HttpStatus;
+import org.apache.http.protocol.HTTP;
 
 import java.util.ArrayList;
 
@@ -76,8 +80,9 @@ public class EntryListFragment extends BaseFragment {
         if (savedInstanceState != null) {
             // Retrieve entries and update adapter
             entries = savedInstanceState.getParcelableArrayList(KEY_ENTRIES);
-            adapter.updateFeeds(entries);
-
+            if (entries != null) {
+                adapter.updateFeeds(entries);
+            }
             // Retrieve selected position
             selectedEntryIndex = savedInstanceState.getInt(KEY_SELECTED_ENTRY_INDEX);
 
@@ -95,12 +100,16 @@ public class EntryListFragment extends BaseFragment {
             @Override
             public void success(EntryResponse entryResponse, Response response) {
                 dismissProgressDialog();
-                entries = entryResponse
-                        .getResponseData()
-                        .getFeed()
-                        .getEntries();
-                adapter.updateFeeds(entries);
-                showPreviouslySelectedEntry();
+                if (entryResponse.getResponseStatus() == HttpStatus.SC_OK){
+                    entries = entryResponse
+                            .getResponseData()
+                            .getFeed()
+                            .getEntries();
+                    adapter.updateFeeds(entries);
+                    showPreviouslySelectedEntry();
+                } else {
+                    Toast.makeText(getActivity(), entryResponse.getResponseDetails(), Toast.LENGTH_SHORT ).show();
+                }
             }
 
             @Override
