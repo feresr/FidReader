@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.globant.fernandoraviola.fidreader.R;
 import com.globant.fernandoraviola.fidreader.fragments.BaseFragment;
+import com.globant.fernandoraviola.fidreader.fragments.FavoriteFragment;
 import com.globant.fernandoraviola.fidreader.fragments.NavigationDrawerFragment;
 import com.globant.fernandoraviola.fidreader.fragments.SearchFeedsFragment;
 import com.globant.fernandoraviola.fidreader.helpers.Navigator;
@@ -63,7 +64,7 @@ public class MainActivity extends FragmentActivity
                 navigator.pushFragment(new SearchFeedsFragment(), null, false);
                 break;
             default:
-                navigator.pushFragment(PlaceholderFragment.newInstance(position), null, false);
+                navigator.pushFragment(new FavoriteFragment(), null, false);
         }
     }
 
