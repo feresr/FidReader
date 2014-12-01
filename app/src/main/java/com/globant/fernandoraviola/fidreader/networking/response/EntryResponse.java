@@ -10,7 +10,7 @@ package com.globant.fernandoraviola.fidreader.networking.response;
 public class EntryResponse {
 
     private String responseDetails;
-    private String responseStatus;
+    private int responseStatus;
     private EntryResponseData responseData;
 
     public String getResponseDetails() {
@@ -21,7 +21,7 @@ public class EntryResponse {
         this.responseDetails = responseDetails;
     }
 
-    public String getResponseStatus() {
+    public int getResponseStatus() {
         return responseStatus;
     }
 
