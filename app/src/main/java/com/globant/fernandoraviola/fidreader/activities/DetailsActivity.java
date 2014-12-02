@@ -23,12 +23,12 @@ public class DetailsActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_details);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             this.finish();
             return;
         }
+        setContentView(R.layout.activity_details);
 
         FragmentManager fm = getSupportFragmentManager();
         Entry entry = getIntent().getExtras().getParcelable(Entry.TAG);

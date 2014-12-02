@@ -28,6 +28,8 @@ public class EntryDetailFragment extends BaseFragment {
     private TextView contentTextView;
     private CheckBox addToFavoriteCheckBox;
     private Entry entry;
+    private CompoundButton.OnCheckedChangeListener checkListener;
+    private Realm realm;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,33 +37,43 @@ public class EntryDetailFragment extends BaseFragment {
 
         View view = inflater.inflate(R.layout.fragment_entry_detail, container, false);
 
+        realm = Realm.getInstance(getActivity());
+
         titleTextView = (TextView) view.findViewById(R.id.title);
         authorTextView = (TextView) view.findViewById(R.id.author);
         dateTextView = (TextView) view.findViewById(R.id.date);
         contentTextView = (TextView) view.findViewById(R.id.content);
         addToFavoriteCheckBox = (CheckBox) view.findViewById(R.id.favorite_checkBox);
-        addToFavoriteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        checkListener = new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    Realm realm = Realm.getInstance(getActivity());
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                realm.beginTransaction();
 
-                    Favorite isAlreadyAdded = realm.where(Favorite.class).contains("title",entry.getTitle()).findFirst();
-                    if (isAlreadyAdded == null) {
-                        // Transactions give you easy thread-safety
-                        realm.beginTransaction();
-                        Favorite favorite = realm.createObject(Favorite.class);
-                        favorite.setTitle(entry.getTitle());
-                        favorite.setContent(entry.getContent());
-                        favorite.setPublishedDate(entry.getPublishedDate());
-                        favorite.setLink(entry.getLink());
-                        favorite.setAuthor(entry.getAuthor());
+                if (isChecked) {
+
+                    // Save entry as favorite
+                    Favorite favorite = realm.createObject(Favorite.class);
+                    favorite.setTitle(entry.getTitle());
+                    favorite.setContent(entry.getContent());
+                    favorite.setPublishedDate(entry.getPublishedDate());
+                    favorite.setLink(entry.getLink());
+                    favorite.setAuthor(entry.getAuthor());
+
+                } else {
+
+                    //Remove entry from favorites.
+                    Favorite favorite = realm.where(Favorite.class)
+                            .equalTo("title", entry.getTitle())
+                            .findFirst();
+                    if (favorite != null) {
+                        favorite.removeFromRealm();
                     }
-
-                    realm.commitTransaction();
                 }
+
+                realm.commitTransaction();
             }
-        });
+        };
+
         return view;
     }
 
@@ -72,7 +84,33 @@ public class EntryDetailFragment extends BaseFragment {
         contentTextView.setText(Html.fromHtml(entry.getContent()));
     }
 
-    public void updateEntry(Entry entry) {
+    public void updateEntry(final Entry entry) {
         this.entry = entry;
+
+        //Every time we update an entry, we avoid changes to the db by nullifying the lister set on
+        //the checkbox adapter.
+        addToFavoriteCheckBox.setOnCheckedChangeListener(null);
+
+        //Then, we set the correct state for the selected entry. Assured that this change won't
+        // affect the db.
+        addToFavoriteCheckBox.setChecked(existsInDb(entry));
+
+        //And put the listener back in. To start listening for user input.
+        addToFavoriteCheckBox.setOnCheckedChangeListener(checkListener);
+    }
+
+    /**
+     * Check if a particular entry exists in the db.
+     *
+     * @param entry Entry
+     * @return whether a particular entry already exists inside the db or not.
+     */
+    public boolean existsInDb(Entry entry) {
+
+        realm.beginTransaction();
+        boolean existsInDb = realm.where(Favorite.class).equalTo("title", entry.getTitle()).findFirst() != null;
+        realm.commitTransaction();
+        return existsInDb;
+
     }
 }

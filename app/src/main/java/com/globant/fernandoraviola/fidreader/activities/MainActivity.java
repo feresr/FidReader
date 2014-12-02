@@ -63,8 +63,11 @@ public class MainActivity extends FragmentActivity
             case 0:
                 navigator.pushFragment(new SearchFeedsFragment(), null, false);
                 break;
-            default:
+            case 1:
                 navigator.pushFragment(new FavoriteFragment(), null, false);
+                break;
+            default:
+                navigator.pushFragment(PlaceholderFragment.newInstance(position), null, false);
         }
     }
 
