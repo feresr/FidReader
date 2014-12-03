@@ -82,6 +82,7 @@ public class EntryDetailFragment extends BaseFragment {
         authorTextView.setText(Html.fromHtml(entry.getAuthor()));
         dateTextView.setText(Html.fromHtml(entry.getPublishedDate()));
         contentTextView.setText(Html.fromHtml(entry.getContent()));
+        addToFavoriteCheckBox.setVisibility(View.VISIBLE);
     }
 
     public void updateEntry(final Entry entry) {
