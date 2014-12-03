@@ -2,6 +2,9 @@ package com.globant.fernandoraviola.fidreader.models;
 
 import io.realm.RealmObject;
 
+/**
+ * Represents an entry marked as favorite. Extends RealmObject for db persistence.
+ */
 public class Favorite extends RealmObject {
     private String title;
     private String link;
