@@ -10,6 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.globant.fernandoraviola.fidreader.R;
+import com.globant.fernandoraviola.fidreader.helpers.Storage;
 import com.globant.fernandoraviola.fidreader.models.Entry;
 import com.globant.fernandoraviola.fidreader.models.Favorite;
 
@@ -29,15 +30,14 @@ public class EntryDetailFragment extends BaseFragment {
     private CheckBox addToFavoriteCheckBox;
     private Entry entry;
     private CompoundButton.OnCheckedChangeListener checkListener;
-    private Realm realm;
-
+    private Storage storage;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_entry_detail, container, false);
 
-        realm = Realm.getInstance(getActivity());
+        storage = Storage.getInstance(getActivity());
 
         titleTextView = (TextView) view.findViewById(R.id.title);
         authorTextView = (TextView) view.findViewById(R.id.author);
@@ -47,30 +47,11 @@ public class EntryDetailFragment extends BaseFragment {
         checkListener = new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                realm.beginTransaction();
-
                 if (isChecked) {
-
-                    // Save entry as favorite
-                    Favorite favorite = realm.createObject(Favorite.class);
-                    favorite.setTitle(entry.getTitle());
-                    favorite.setContent(entry.getContent());
-                    favorite.setPublishedDate(entry.getPublishedDate());
-                    favorite.setLink(entry.getLink());
-                    favorite.setAuthor(entry.getAuthor());
-
+                    storage.saveFavorite(entry);
                 } else {
-
-                    //Remove entry from favorites.
-                    Favorite favorite = realm.where(Favorite.class)
-                            .equalTo("title", entry.getTitle())
-                            .findFirst();
-                    if (favorite != null) {
-                        favorite.removeFromRealm();
-                    }
+                    storage.removeFromFavorites(entry);
                 }
-
-                realm.commitTransaction();
             }
         };
 
@@ -94,24 +75,9 @@ public class EntryDetailFragment extends BaseFragment {
 
         //Then, we set the correct state for the selected entry. Assured that this change won't
         // affect the db.
-        addToFavoriteCheckBox.setChecked(existsInDb(entry));
+        addToFavoriteCheckBox.setChecked(storage.isFavorite(entry));
 
         //And put the listener back in. To start listening for user input.
         addToFavoriteCheckBox.setOnCheckedChangeListener(checkListener);
-    }
-
-    /**
-     * Check if a particular entry exists in the db.
-     *
-     * @param entry Entry
-     * @return whether a particular entry already exists inside the db or not.
-     */
-    public boolean existsInDb(Entry entry) {
-
-        realm.beginTransaction();
-        boolean existsInDb = realm.where(Favorite.class).equalTo("title", entry.getTitle()).findFirst() != null;
-        realm.commitTransaction();
-        return existsInDb;
-
     }
 }
