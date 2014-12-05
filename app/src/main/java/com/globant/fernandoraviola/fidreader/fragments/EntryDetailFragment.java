@@ -5,10 +5,17 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.globant.fernandoraviola.fidreader.R;
+import com.globant.fernandoraviola.fidreader.helpers.Storage;
 import com.globant.fernandoraviola.fidreader.models.Entry;
+import com.globant.fernandoraviola.fidreader.models.Favorite;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * This fragment displays details about about a particular entry.
@@ -20,19 +27,33 @@ public class EntryDetailFragment extends BaseFragment {
     private TextView authorTextView;
     private TextView dateTextView;
     private TextView contentTextView;
-
+    private CheckBox addToFavoriteCheckBox;
     private Entry entry;
-
+    private CompoundButton.OnCheckedChangeListener checkListener;
+    private Storage storage;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_entry_detail, container, false);
 
+        storage = Storage.getInstance(getActivity());
+
         titleTextView = (TextView) view.findViewById(R.id.title);
         authorTextView = (TextView) view.findViewById(R.id.author);
         dateTextView = (TextView) view.findViewById(R.id.date);
         contentTextView = (TextView) view.findViewById(R.id.content);
+        addToFavoriteCheckBox = (CheckBox) view.findViewById(R.id.favorite_checkBox);
+        checkListener = new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    storage.saveFavorite(entry);
+                } else {
+                    storage.removeFromFavorites(entry);
+                }
+            }
+        };
 
         return view;
     }
@@ -42,9 +63,21 @@ public class EntryDetailFragment extends BaseFragment {
         authorTextView.setText(Html.fromHtml(entry.getAuthor()));
         dateTextView.setText(Html.fromHtml(entry.getPublishedDate()));
         contentTextView.setText(Html.fromHtml(entry.getContent()));
+        addToFavoriteCheckBox.setVisibility(View.VISIBLE);
     }
 
-    public void updateEntry(Entry entry) {
+    public void updateEntry(final Entry entry) {
         this.entry = entry;
+
+        //Every time we update an entry, we avoid changes to the db by nullifying the lister set on
+        //the checkbox adapter.
+        addToFavoriteCheckBox.setOnCheckedChangeListener(null);
+
+        //Then, we set the correct state for the selected entry. Assured that this change won't
+        // affect the db.
+        addToFavoriteCheckBox.setChecked(storage.isFavorite(entry));
+
+        //And put the listener back in. To start listening for user input.
+        addToFavoriteCheckBox.setOnCheckedChangeListener(checkListener);
     }
 }
