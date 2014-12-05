@@ -9,6 +9,7 @@ import android.text.Html;
 
 import com.globant.fernandoraviola.fidreader.R;
 import com.globant.fernandoraviola.fidreader.fragments.EntryDetailFragment;
+import com.globant.fernandoraviola.fidreader.fragments.FavoriteFragment;
 import com.globant.fernandoraviola.fidreader.models.Entry;
 
 
@@ -24,7 +25,12 @@ public class DetailsActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        // By default, this activity is not available on landscape mode. But in some cases we do
+        // need to use the portrait version. By sending a boolean extra "portrait_allowed" we specify
+        // whether this behaviour is available or not.
+        boolean portrait_allowed = getIntent().getExtras().getBoolean(FavoriteFragment.PORTRAIT_ALLOWED, false);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && !portrait_allowed) {
             this.finish();
             return;
         }
