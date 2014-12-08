@@ -96,6 +96,7 @@ public class Entry implements Parcelable {
         entry.content = favorite.getContent();
         entry.contentSnippet = favorite.getContentSnippet();
         entry.publishedDate = favorite.getPublishedDate();
+        entry.link = favorite.getLink();
         return entry;
     }
 
