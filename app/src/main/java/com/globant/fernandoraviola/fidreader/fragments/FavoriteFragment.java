@@ -41,6 +41,15 @@ public class FavoriteFragment extends BaseFragment implements ListView.OnItemCli
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             title = getResources().getString(R.string.title_section2);
@@ -52,7 +61,7 @@ public class FavoriteFragment extends BaseFragment implements ListView.OnItemCli
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent i = new Intent(getActivity(), DetailsActivity.class);
         Entry entry = Entry.fromFavorite(adapter.getItem(position));
-        i.putExtra(Entry.TAG,entry);
+        i.putExtra(Entry.TAG, entry);
         i.putExtra(PORTRAIT_ALLOWED, true);
         startActivity(i);
     }
