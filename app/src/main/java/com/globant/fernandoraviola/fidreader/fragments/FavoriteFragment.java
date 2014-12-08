@@ -34,6 +34,7 @@ public class FavoriteFragment extends BaseFragment implements ListView.OnItemCli
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favorite_list, container, false);
         listView = (ListView) view.findViewById(android.R.id.list);
+        listView.setEmptyView(view.findViewById(android.R.id.empty));
         adapter = new FavoriteAdapter(getActivity(), R.layout.entry_item);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
