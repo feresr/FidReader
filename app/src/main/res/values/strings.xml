@@ -30,5 +30,6 @@
     <string name="title_activity_details">Detail</string>
     <string name="search_feeds_title">Search feeds</string>
     <string name="add_to_favorites">Add to favorites</string>
+    <string name="empty_favorites_listview_message">No favorites saved yet</string>
 
 </resources>

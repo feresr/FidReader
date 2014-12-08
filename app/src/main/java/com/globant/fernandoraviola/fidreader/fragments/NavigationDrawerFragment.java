@@ -39,6 +39,7 @@ public class NavigationDrawerFragment extends Fragment {
      * expands it. This shared preference tracks this.
      */
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
+    private static final String CURRENT_SELECTION_TITLE = "current_selection_title";
 
     /**
      * A pointer to the current callbacks instance (the Activity).
@@ -56,6 +57,12 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
+    /**
+     * The navigationDrawerFragment must 'remember' what section title was set to be able to restore
+     * it after closing itself.
+     */
+    private CharSequence title;
+
     public NavigationDrawerFragment() {
     }
 
@@ -70,8 +77,11 @@ public class NavigationDrawerFragment extends Fragment {
 
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
+            title = savedInstanceState.getCharSequence(CURRENT_SELECTION_TITLE);
             mFromSavedInstanceState = true;
         } else {
+            //The default title will be the that of the first secition.
+            title = getString(R.string.title_section1);
             // Select either the default item (0) or the last selected item.
             if (mDrawerListView != null) {
                 mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
@@ -154,12 +164,18 @@ public class NavigationDrawerFragment extends Fragment {
                     return;
                 }
 
-                getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+
+                ActionBar actionBar = getActivity().getActionBar();
+                if (actionBar != null) {
+                    actionBar.setDisplayShowTitleEnabled(true);
+                    title = actionBar.getTitle();
+                }
+
                 if (!isAdded()) {
                     return;
                 }
@@ -208,6 +224,15 @@ public class NavigationDrawerFragment extends Fragment {
         }
         if (mCallbacks != null && !samePosition) {
             mCallbacks.onNavigationDrawerItemSelected(position);
+        } else {
+            /*If the current section was selected, we don't re add the fragment but we DO set the
+            title (this is due to the fact that the title is set by the fragment, as we're not
+            re-adding it we need to set it manually.*/
+            ActionBar actionBar = getActivity().getActionBar();
+            if (actionBar != null && title != null) {
+                actionBar.setDisplayShowTitleEnabled(true);
+                actionBar.setTitle(title);
+            }
         }
     }
 
@@ -230,6 +255,7 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putCharSequence(CURRENT_SELECTION_TITLE, title);
         outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
     }
 

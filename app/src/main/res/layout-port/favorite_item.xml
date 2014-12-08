@@ -28,11 +28,4 @@
         android:layout_marginBottom="10sp"
         android:text="Wed, 12 Nov 2014 04:15:12 -0800" />
 
-    <TextView
-        android:id="@+id/snippet"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16sp"
-        android:text="Scrawled in Medieval Latin on yellowing parchment, an original copy of the Magna Carta is now on view at the Library of ..."
-        android:textColor="@android:color/black" />
 </LinearLayout>

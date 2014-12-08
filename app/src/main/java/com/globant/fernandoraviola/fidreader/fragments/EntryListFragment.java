@@ -85,12 +85,7 @@ public class EntryListFragment extends BaseFragment {
             }
             // Retrieve selected position
             selectedEntryIndex = savedInstanceState.getInt(KEY_SELECTED_ENTRY_INDEX);
-
         }
-
-        //Update listview with the last selected entry, or 0 if none was selected yet.
-        listView.setItemChecked(selectedEntryIndex, true);
-
     }
 
     private void loadFeed() {
