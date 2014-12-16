@@ -51,6 +51,8 @@ public class Entry implements Parcelable {
         return categories;
     }
 
+    public Entry(){}
+
     protected Entry(Parcel in) {
         title = in.readString();
         link = in.readString();
@@ -85,6 +87,17 @@ public class Entry implements Parcelable {
             dest.writeByte((byte) (0x01));
             dest.writeList(categories);
         }
+    }
+
+    public static Entry fromFavorite(Favorite favorite) {
+        Entry entry = new Entry();
+        entry.title = favorite.getTitle();
+        entry.author = favorite.getAuthor();
+        entry.content = favorite.getContent();
+        entry.contentSnippet = favorite.getContentSnippet();
+        entry.publishedDate = favorite.getPublishedDate();
+        entry.link = favorite.getLink();
+        return entry;
     }
 
     @SuppressWarnings("unused")
