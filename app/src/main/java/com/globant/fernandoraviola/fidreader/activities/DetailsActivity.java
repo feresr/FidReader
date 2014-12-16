@@ -25,9 +25,10 @@ public class DetailsActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // By default, this activity is not available on landscape mode. But in some cases we do
-        // need to use the portrait version. By sending a boolean extra "portrait_allowed" we specify
-        // whether this behaviour is available or not.
+        /* By default, this activity is not available on landscape mode. But in some cases we do
+         need to use the portrait version. By sending a boolean extra "portrait_allowed" we specify
+         whether this behaviour is available or not.
+         Use cases where landscape mode is allowed include 'user reviewing favorite entries'. */
         boolean portrait_allowed = getIntent().getExtras().getBoolean(FavoriteFragment.PORTRAIT_ALLOWED, false);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && !portrait_allowed) {

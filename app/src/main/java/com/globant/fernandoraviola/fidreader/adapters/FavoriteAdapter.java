@@ -79,10 +79,10 @@ public class FavoriteAdapter extends BaseAdapter {
 
     public class FavoriteViewholder {
 
-        public final TextView title;
-        public final TextView author;
-        public final TextView date;
-        public final TextView snippet;
+        private final TextView title;
+        private final TextView author;
+        private final TextView date;
+        private final TextView snippet;
 
         public FavoriteViewholder(View view) {
             title = (TextView) view.findViewById(R.id.title);
