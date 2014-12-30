@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.globant.fernandoraviola.fidreader.R;
 import com.globant.fernandoraviola.fidreader.activities.SearchFeedsInterface;
 import com.globant.fernandoraviola.fidreader.adapters.FeedAdapter;
+import com.globant.fernandoraviola.fidreader.helpers.EmptyRecyclerView;
 import com.globant.fernandoraviola.fidreader.models.Feed;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedClient;
 import com.globant.fernandoraviola.fidreader.networking.GoogleFeedInterface;
@@ -44,7 +45,7 @@ public class SearchFeedsFragment extends BaseFragment implements FeedAdapter.OnC
     /**
      * The fragment's ListView/GridView.
      */
-    private RecyclerView recyclerView;
+    private EmptyRecyclerView recyclerView;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -73,10 +74,10 @@ public class SearchFeedsFragment extends BaseFragment implements FeedAdapter.OnC
         View view = inflater.inflate(R.layout.fragment_search_feeds, container, false);
 
         // Set the adapter
-        recyclerView = (RecyclerView) view.findViewById(android.R.id.list);
+        recyclerView = (EmptyRecyclerView) view.findViewById(android.R.id.list);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        //recyclerView.setEmptyView(view.findViewById(android.R.id.empty));
+        recyclerView.setEmptyView(view.findViewById(android.R.id.empty));
 
         searchBtn = (Button) view.findViewById(R.id.keyword_search_button);
         searchTxt = (TextView) view.findViewById(R.id.keyword_search_editText);

@@ -24,7 +24,7 @@ public class EntryDetailFragment extends BaseFragment {
     private TextView titleTextView;
     private TextView authorTextView;
     private TextView dateTextView;
-    private WebView contentTextView;
+    private WebView contentWebView;
     private CheckBox addToFavoriteCheckBox;
     private Entry entry;
     private CompoundButton.OnCheckedChangeListener checkListener;
@@ -40,7 +40,7 @@ public class EntryDetailFragment extends BaseFragment {
         titleTextView = (TextView) view.findViewById(R.id.title);
         authorTextView = (TextView) view.findViewById(R.id.author);
         dateTextView = (TextView) view.findViewById(R.id.date);
-        contentTextView = (WebView) view.findViewById(R.id.content);
+        contentWebView = (WebView) view.findViewById(R.id.content);
         addToFavoriteCheckBox = (CheckBox) view.findViewById(R.id.favorite_checkBox);
         checkListener = new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -60,7 +60,7 @@ public class EntryDetailFragment extends BaseFragment {
         titleTextView.setText(Html.fromHtml(entry.getTitle()));
         authorTextView.setText(Html.fromHtml(entry.getAuthor()));
         dateTextView.setText(Html.fromHtml(entry.getPublishedDate()));
-        contentTextView.loadData(entry.getContent(), "text/html", null);
+        contentWebView.loadData(entry.getContent(), "text/html", null);
 
         addToFavoriteCheckBox.setVisibility(View.VISIBLE);
 
