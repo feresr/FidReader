@@ -3,12 +3,12 @@ package com.globant.fernandoraviola.fidreader.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.globant.fernandoraviola.fidreader.R;
@@ -28,7 +28,7 @@ import retrofit.client.Response;
 /**
  * A fragment representing a list of Feeds.
  */
-public class SearchFeedsFragment extends BaseFragment implements ListView.OnItemClickListener {
+public class SearchFeedsFragment extends BaseFragment implements FeedAdapter.OnClickListener {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String SECTION = "section";
@@ -44,7 +44,7 @@ public class SearchFeedsFragment extends BaseFragment implements ListView.OnItem
     /**
      * The fragment's ListView/GridView.
      */
-    private ListView mListView;
+    private RecyclerView recyclerView;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -56,8 +56,7 @@ public class SearchFeedsFragment extends BaseFragment implements ListView.OnItem
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAdapter = new FeedAdapter(getActivity(),
-                android.R.layout.simple_list_item_2);
+        mAdapter = new FeedAdapter(R.layout.simple_feed_view, this);
     }
 
     @Override
@@ -74,12 +73,10 @@ public class SearchFeedsFragment extends BaseFragment implements ListView.OnItem
         View view = inflater.inflate(R.layout.fragment_search_feeds, container, false);
 
         // Set the adapter
-        mListView = (ListView) view.findViewById(android.R.id.list);
-        mListView.setAdapter(mAdapter);
-        mListView.setEmptyView(view.findViewById(android.R.id.empty));
-
-        // Set OnItemClickListener so we can be notified on item clicks
-        mListView.setOnItemClickListener(this);
+        recyclerView = (RecyclerView) view.findViewById(android.R.id.list);
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //recyclerView.setEmptyView(view.findViewById(android.R.id.empty));
 
         searchBtn = (Button) view.findViewById(R.id.keyword_search_button);
         searchTxt = (TextView) view.findViewById(R.id.keyword_search_editText);
@@ -114,11 +111,6 @@ public class SearchFeedsFragment extends BaseFragment implements ListView.OnItem
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement FragmentInteractionsInterface");
         }
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        fragmentInteractionsListener.showFeedEntries(mAdapter.getItem(position));
     }
 
     private void fetchFeeds(String keyword) {
@@ -161,5 +153,10 @@ public class SearchFeedsFragment extends BaseFragment implements ListView.OnItem
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(KEY_FEEDS, feeds);
+    }
+
+    @Override
+    public void onClick(Feed feed) {
+        fragmentInteractionsListener.showFeedEntries(feed);
     }
 }

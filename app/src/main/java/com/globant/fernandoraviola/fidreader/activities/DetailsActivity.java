@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 
 import com.globant.fernandoraviola.fidreader.R;
@@ -17,7 +18,7 @@ import com.globant.fernandoraviola.fidreader.models.Entry;
  * This class shows details for a specific Entry. It's meant to be present only on portrait
  * orientation and will be destroyed upon rotation.
  */
-public class DetailsActivity extends FragmentActivity {
+public class DetailsActivity extends ActionBarActivity {
 
     EntryDetailFragment entryDetailFragment;
 

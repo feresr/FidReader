@@ -29,8 +29,9 @@
         android:gravity="center"
         android:text="@string/search_feeds_message" />
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@android:id/list"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/keyword_search_button" />
