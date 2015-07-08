@@ -1,11 +1,13 @@
 package com.globant.fernandoraviola.fidreader.activities;
 
 
-import android.app.ActionBar;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +23,7 @@ import com.globant.fernandoraviola.fidreader.models.Entry;
  * details about the selected entry on a fragment or in new Activity depending upon the current
  * orientation of the device.
  */
-public class FeedActivity extends FragmentActivity implements EntryListFragment.EntryListCallbacksInterface {
+public class FeedActivity extends ActionBarActivity implements EntryListFragment.EntryListCallbacksInterface {
 
     public static final String FEED_URL_TAG = "FEED_URL";
     public static final String FEED_TITLE_TAG = "FEED_TITLE";
@@ -55,14 +57,15 @@ public class FeedActivity extends FragmentActivity implements EntryListFragment.
             title = savedInstanceState.getString(FEED_TITLE_TAG);
         }
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null && title != null) {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setTitle(Html.fromHtml(title));
+
+            //Provides back navigation on the action bar
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        //Provides back navigation on the action bar
-        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

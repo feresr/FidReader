@@ -1,11 +1,12 @@
 package com.globant.fernandoraviola.fidreader.activities;
 
-import android.app.Activity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
+
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +24,7 @@ import com.globant.fernandoraviola.fidreader.models.Feed;
 /**
  * Acts as the main entry point for the application.
  */
-public class MainActivity extends FragmentActivity
+public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, SearchFeedsInterface {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -48,7 +49,7 @@ public class MainActivity extends FragmentActivity
         setContentView(R.layout.activity_main);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer);
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(

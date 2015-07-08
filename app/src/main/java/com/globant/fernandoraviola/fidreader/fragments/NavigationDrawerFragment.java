@@ -1,8 +1,8 @@
 package com.globant.fernandoraviola.fidreader.fragments;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v4.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -107,6 +108,7 @@ public class NavigationDrawerFragment extends Fragment {
                              Bundle savedInstanceState) {
         mDrawerListView = (ListView) inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
+
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -170,7 +172,7 @@ public class NavigationDrawerFragment extends Fragment {
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
 
-                ActionBar actionBar = getActivity().getActionBar();
+                ActionBar actionBar = getActionBar();
                 if (actionBar != null) {
                     actionBar.setDisplayShowTitleEnabled(true);
                     title = actionBar.getTitle();
@@ -228,12 +230,16 @@ public class NavigationDrawerFragment extends Fragment {
             /*If the current section was selected, we don't re add the fragment but we DO set the
             title (this is due to the fact that the title is set by the fragment, as we're not
             re-adding it we need to set it manually.*/
-            ActionBar actionBar = getActivity().getActionBar();
+            ActionBar actionBar = getActionBar();
             if (actionBar != null && title != null) {
                 actionBar.setDisplayShowTitleEnabled(true);
                 actionBar.setTitle(title);
             }
         }
+    }
+
+    public ActionBar getActionBar(){
+        return ((ActionBarActivity) getActivity()).getSupportActionBar();
     }
 
     @Override
@@ -291,10 +297,6 @@ public class NavigationDrawerFragment extends Fragment {
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setTitle(R.string.app_name);
-    }
-
-    private ActionBar getActionBar() {
-        return getActivity().getActionBar();
     }
 
     /**

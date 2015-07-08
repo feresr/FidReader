@@ -5,6 +5,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -12,10 +13,7 @@ import android.widget.TextView;
 import com.globant.fernandoraviola.fidreader.R;
 import com.globant.fernandoraviola.fidreader.helpers.Storage;
 import com.globant.fernandoraviola.fidreader.models.Entry;
-import com.globant.fernandoraviola.fidreader.models.Favorite;
 
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
  * This fragment displays details about about a particular entry.
@@ -26,7 +24,7 @@ public class EntryDetailFragment extends BaseFragment {
     private TextView titleTextView;
     private TextView authorTextView;
     private TextView dateTextView;
-    private TextView contentTextView;
+    private WebView contentWebView;
     private CheckBox addToFavoriteCheckBox;
     private Entry entry;
     private CompoundButton.OnCheckedChangeListener checkListener;
@@ -42,7 +40,7 @@ public class EntryDetailFragment extends BaseFragment {
         titleTextView = (TextView) view.findViewById(R.id.title);
         authorTextView = (TextView) view.findViewById(R.id.author);
         dateTextView = (TextView) view.findViewById(R.id.date);
-        contentTextView = (TextView) view.findViewById(R.id.content);
+        contentWebView = (WebView) view.findViewById(R.id.content);
         addToFavoriteCheckBox = (CheckBox) view.findViewById(R.id.favorite_checkBox);
         checkListener = new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -62,8 +60,10 @@ public class EntryDetailFragment extends BaseFragment {
         titleTextView.setText(Html.fromHtml(entry.getTitle()));
         authorTextView.setText(Html.fromHtml(entry.getAuthor()));
         dateTextView.setText(Html.fromHtml(entry.getPublishedDate()));
-        contentTextView.setText(Html.fromHtml(entry.getContent()));
+        contentWebView.loadData(entry.getContent(), "text/html", null);
+
         addToFavoriteCheckBox.setVisibility(View.VISIBLE);
+
     }
 
     public void updateEntry(final Entry entry) {
